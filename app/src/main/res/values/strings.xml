@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">OnlineClothingStoreApp</string>
+    <string name="tvDangKi">Đăng ký</string>
+    <string name="edtTenDangNhap">Tên đăng nhập</string>
+    <string name="edtEmail">Email</string>
+    <string name="edtMatKhau">Mật khẩu</string>
+    <string name="edtXacNhanMatKhau">Xác nhận mật khẩu</string>
+    <string name="btnDangKi">Đăng ký</string>
+    <string name="txDangNhap">Đăng nhập</string>
+    <string name="edtEmailDangNhap">Email</string>
+    <string name="ediMatKhauDangNhap">Mật khẩu</string>
+    <string name="tvQuenMatKhau">Quên mật khẩu?</string>
+    <string name="btnDangNhap">ĐĂNG NHẬP</string>
+    <string name="tvChuaChoTaiKhoanDangKiNgay">Chưa có tài khoản? Đăng ký ngay</string>
+    <string name="tvDaCoTaiKhoanDangNhap">Đã có tài khoản? Đăng nhập</string>
+    <string name="txtNu">NỮ</string>
+    <string name="txtNam">NAM</string>
+    <string name="TrangChu">Trang chủ</string>
+    <string name="TimKiem">Tìm kiếm</string>
+    <string name="GioHang">Giỏ hàng</string>
+    <string name="HoSo">Hồ sơ</string>
+</resources>
