@@ -2,16 +2,16 @@ package com.example.onlineclothingstoreapp.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.onlineclothingstoreapp.firebase.FirebaseService
 import com.example.onlineclothingstoreapp.models.Product
-import com.google.firebase.firestore.FirebaseFirestore
 
 class ProductRepository {
-    private val db = FirebaseFirestore.getInstance()
+    val firebaseService = FirebaseService()
 
     fun getAllProducts(): LiveData<List<Product>> {
         val data = MutableLiveData<List<Product>>(emptyList())
 
-        db.collection("products").get()
+        firebaseService.db.collection("products").get()
             .addOnSuccessListener { result ->
                 val list = result.toObjects(Product::class.java)
                 data.value = list
@@ -27,7 +27,7 @@ class ProductRepository {
             return data
         }
 
-        db.collection("products").document(productId).get()
+        firebaseService.db.collection("products").document(productId).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
                     data.value = document.toObject(Product::class.java)

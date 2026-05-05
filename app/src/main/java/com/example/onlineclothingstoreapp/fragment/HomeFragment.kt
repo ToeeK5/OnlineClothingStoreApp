@@ -9,9 +9,13 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.activities.ProductDetailActivity
+import com.example.onlineclothingstoreapp.adapters.CategoryAdapter
 import com.example.onlineclothingstoreapp.adapters.ProductAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentHomeBinding
+import com.example.onlineclothingstoreapp.models.Category
 import com.example.onlineclothingstoreapp.viewmodels.ProductViewmodel
 
 class HomeFragment : Fragment() {
@@ -19,9 +23,9 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    // Sử dụng ProductViewmodel để lấy danh sách sản phẩm
     private val productViewModel: ProductViewmodel by viewModels()
     private lateinit var productAdapter: ProductAdapter
+    private lateinit var categoryAdapter: CategoryAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,12 +38,28 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
+        setupCategories()
+        setupProducts()
         observeViewModel()
     }
 
-    private fun setupRecyclerView() {
-        // Khởi tạo Adapter với sự kiện click chuyển sang trang chi tiết
+    private fun setupCategories() {
+        val categories = listOf(
+            Category("Trang phục", R.drawable.ic_launcher_background),
+            Category("Phụ kiện", R.drawable.ic_launcher_background),
+            Category("Giày", R.drawable.ic_launcher_background),
+            Category("Trang sức", R.drawable.ic_launcher_background),
+            Category("Túi xách", R.drawable.ic_launcher_background)
+        )
+
+        categoryAdapter = CategoryAdapter(categories)
+        binding.rcvCategories.apply {
+            layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+            adapter = categoryAdapter
+        }
+    }
+
+    private fun setupProducts() {
         productAdapter = ProductAdapter { product ->
             val intent = Intent(requireContext(), ProductDetailActivity::class.java)
             intent.putExtra("PRODUCT_ID", product.id)
@@ -49,17 +69,14 @@ class HomeFragment : Fragment() {
         binding.rcvProducts.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)
             adapter = productAdapter
-            setHasFixedSize(true)
+            isNestedScrollingEnabled = false
         }
     }
 
     private fun observeViewModel() {
-        // Quan sát dữ liệu từ Firebase qua ViewModel
         productViewModel.products.observe(viewLifecycleOwner) { products ->
             if (products.isNotEmpty()) {
                 productAdapter.updateData(products)
-            } else {
-                // Xử lý khi không có dữ liệu (có thể hiện thông báo hoặc progress bar)
             }
         }
     }
