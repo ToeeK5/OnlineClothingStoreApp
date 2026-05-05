@@ -19,24 +19,24 @@ class ProductAdapter(
         RecyclerView.ViewHolder(binding.root) {
         
         fun bind(product: Product) {
-            binding.txtName.text = product.name
-            binding.txtCategory.text = product.category
-            
-            // Định dạng tiền tệ Việt Nam
-            val formatter = NumberFormat.getCurrencyInstance(Locale("vi", "VN"))
-            binding.txtPrice.text = formatter.format(product.price)
-            
-            binding.ratingBar.rating = product.rating
+            binding.apply {
+                txtName.text = product.name
+                txtCategory.text = product.category
+                
+                // Định dạng tiền tệ Việt Nam (hoặc USD tùy bạn muốn)
+                val formatter = NumberFormat.getCurrencyInstance(Locale("vi", "VN"))
+                txtPrice.text = formatter.format(product.price)
 
-            // Load ảnh bằng Glide
-            Glide.with(binding.root.context)
-                .load(product.imageUrl)
-                .placeholder(R.drawable.ic_launcher_background)
-                .error(R.drawable.ic_launcher_background)
-                .into(binding.imgProduct)
+                // Load ảnh bằng Glide
+                Glide.with(root.context)
+                    .load(product.imageUrl)
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
+                    .into(imgProduct)
 
-            binding.root.setOnClickListener {
-                onItemClick(product)
+                root.setOnClickListener {
+                    onItemClick(product)
+                }
             }
         }
     }

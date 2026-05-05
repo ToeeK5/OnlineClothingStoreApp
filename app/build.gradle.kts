@@ -47,6 +47,10 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.google.firebase.auth.ktx)
 
+    // Google Sign-In (Thư viện bắt buộc để dùng GoogleSignInClient)
+    implementation(libs.play.services.auth)
+
+
     // AndroidX & Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -77,10 +81,6 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-
-
-    val nav_version = "2.9.7" // Hoặc phiên bản mới nhất
-    // Kotlin (Nếu bạn dùng Kotlin, hãy dùng dòng này thay vì 2 dòng trên để có hỗ trợ tốt nhất)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
     // Feature module support for Fragments
