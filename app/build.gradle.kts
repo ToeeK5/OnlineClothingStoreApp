@@ -79,16 +79,10 @@ dependencies {
 
 
 
-    val nav_version = "2.9.7" // Hoặc phiên bản mới nhất
-    // Kotlin (Nếu bạn dùng Kotlin, hãy dùng dòng này thay vì 2 dòng trên để có hỗ trợ tốt nhất)
+
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    // Feature module support for Fragments
     implementation(libs.androidx.navigation.dynamic.features.fragment)
-
-    // Testing Navigation
     androidTestImplementation(libs.androidx.navigation.testing)
-
-    // JSON serialization library, works with the Kotlin serialization plugin
     implementation(libs.kotlinx.serialization.json)
 }

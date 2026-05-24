@@ -38,4 +38,47 @@
     <string name="TimKiem">Tìm kiếm</string>
     <string name="GioHang">Giỏ hàng</string>
     <string name="HoSo">Hồ sơ</string>
+
+    <string name="your_choice">Lựa chọn của bạn</string>
+    <string name="shopping_bag">Shopping Bag</string>
+
+    <string name="product_coat_name">Áo khoác da Lana Wool</string>
+    <string name="product_coat_variant">Xanh xám / Cổ lớn</string>
+    <string name="product_coat_price">300,000 VNĐ</string>
+
+    <string name="product_pants_name">Quần lụa xếp ly Silk Pleated</string>
+    <string name="product_pants_variant">Xám than / Cỡ vừa</string>
+    <string name="product_pants_price">300,000 VNĐ</string>
+
+    <string name="minus">-</string>
+    <string name="plus">+</string>
+    <string name="default_quantity">1</string>
+
+    <string name="order_summary">Tổng đơn hàng</string>
+    <string name="subtotal">Tạm tính</string>
+    <string name="subtotal_value">300,000 VNĐ</string>
+    <string name="shipping_fee">Phí vận chuyển</string>
+    <string name="free_shipping">Miễn phí</string>
+    <string name="tax">Thuế</string>
+    <string name="tax_value">300,000 VNĐ</string>
+    <string name="total">Tổng cộng</string>
+    <string name="total_value">300,000 VNĐ</string>
+
+    <string name="checkout_now">CHECKOUT NOW</string>
+    <string name="secure_transaction">Giao dịch được bảo mật</string>
+    <string name="price_checkout">$205.00</string>
+    <string name="place_order">PLACE ORDER</string>
+    <string name="tongtien">Total</string>
+    <string name="price_tax">$5.00</string>
+    <string name="tax_price">Tax</string>
+    <string name="ship">Free</string>
+    <string name="ship_ship">Shipping</string>
+    <string name="price_subtotal">$200.00</string>
+    <string name="subtotal_price">Subtotal</string>
+    <string name="thanh_to_n_khi_nh_n_h_ng">Thanh toán khi nhận hàng</string>
+    <string name="cash_on_delivery">Cash on Delivery</string>
+    <string name="tp_h_ch_minh_vi_t_nam">TP. Hồ Chí Minh, Việt Nam</string>
+    <string name="sdt">0123 456 789</string>
+    <string name="name_diachi">Lê Thành Hiệp</string>
+    <string name="checkout">Checkout</string>
 </resources>
