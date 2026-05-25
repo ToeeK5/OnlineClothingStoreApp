@@ -2,11 +2,17 @@ package com.example.onlineclothingstoreapp.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.onlineclothingstoreapp.databinding.ActivityRegisterBinding
 import com.example.onlineclothingstoreapp.firebase.FirebaseService
 import com.example.onlineclothingstoreapp.models.User
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.FirebaseNetworkException
+import com.google.firebase.auth.FirebaseAuthException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -18,59 +24,143 @@ class RegisterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnRegister.setOnClickListener {
-            val username = binding.edtUsername.text.toString().trim()
-            val email = binding.edtEmail.text.toString().trim()
-            val password = binding.edtPassword.text.toString().trim()
-            val confirmPassword = binding.edtConfirmPassword.text.toString().trim()
-
-            if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                Toast.makeText(this, "Vui lòng nhập đầy đủ thông tin!", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            if (password != confirmPassword) {
-                binding.edtConfirmPassword.error = "Mật khẩu xác nhận không khớp!"
-                return@setOnClickListener
-            }
-
-
-            val firebaseService = FirebaseService()
-            firebaseService.auth
-                .createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        val userId = firebaseService.auth.currentUser?.uid
-
-                        val user = User(
-                            id = userId ?: "",
-                            username = username,
-                            email = email
-                        )
-
-                        userId?.let { uid ->
-                            firebaseService.db.collection("users").document(uid)
-                                .set(user)
-                                .addOnSuccessListener {
-                                    Toast.makeText(this, "Đăng ký thành công!", Toast.LENGTH_LONG).show()
-                                    startActivity(Intent(this, LoginActivity::class.java))
-                                    finish()
-                                }
-                                .addOnFailureListener {
-                                    binding.btnRegister.isEnabled = true
-                                    Toast.makeText(this, "Lỗi lưu dữ liệu: ${it.message}", Toast.LENGTH_SHORT).show()
-                                }
-                        }
-                    } else {
-                        binding.btnRegister.isEnabled = true
-                        Toast.makeText(this, "Đăng ký thất bại: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
-                    }
-                }
+            registerUser()
         }
 
-        // Chuyển sang màn hình Đăng nhập
         binding.tvLogin.setOnClickListener {
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
+
+        binding.btnBack.setOnClickListener {
+            onBackPressedDispatcher.onBackPressed()
+        }
+    }
+
+    private fun registerUser() {
+        val username = binding.edtUsername.text.toString().trim()
+        val email = binding.edtEmail.text.toString().trim()
+        val password = binding.edtPassword.text.toString().trim()
+        val confirmPassword = binding.edtConfirmPassword.text.toString().trim()
+
+        // Reset errors
+        binding.edtUsername.error = null
+        binding.edtEmail.error = null
+        binding.edtPassword.error = null
+        binding.edtConfirmPassword.error = null
+
+
+        if (username.isEmpty()) {
+            binding.edtUsername.error = "Vui lòng nhập tên đăng nhập"
+            binding.edtUsername.requestFocus()
+            return
+        }
+        if (email.isEmpty()) {
+            binding.edtEmail.error = "Vui lòng nhập địa chỉ email"
+            binding.edtEmail.requestFocus()
+            return
+        }
+        if (password.isEmpty()) {
+            binding.edtPassword.error = "Vui lòng nhập mật khẩu"
+            binding.edtPassword.requestFocus()
+            return
+        }
+        if (confirmPassword.isEmpty()) {
+            binding.edtConfirmPassword.error = "Vui lòng xác nhận mật khẩu"
+            binding.edtConfirmPassword.requestFocus()
+            return
+        }
+
+        if (password != confirmPassword) {
+            binding.edtConfirmPassword.error = "Mật khẩu xác nhận không khớp!"
+            binding.edtConfirmPassword.requestFocus()
+            return
+        }
+
+        if (!binding.cbTerms.isChecked) {
+            showSnackbar("Bạn phải đồng ý với điều khoản dịch vụ")
+            return
+        }
+
+        setLoading(true)
+
+        val firebaseService = FirebaseService()
+        firebaseService.auth
+            .createUserWithEmailAndPassword(email, password)
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val userId = firebaseService.auth.currentUser?.uid
+
+                    val user = User(
+                        id = userId ?: "",
+                        username = username,
+                        email = email
+                    )
+
+                    userId?.let { uid ->
+                        firebaseService.db.collection("users").document(uid)
+                            .set(user)
+                            .addOnSuccessListener {
+                                setLoading(false)
+                                showSnackbar("Đăng ký thành công!", true)
+                                // Chuyển màn hình sau khi hiện thông báo thành công
+                                binding.root.postDelayed({
+                                    startActivity(Intent(this, LoginActivity::class.java))
+                                    finish()
+                                }, 1500)
+                            }
+                            .addOnFailureListener {
+                                setLoading(false)
+                                showSnackbar("Lỗi lưu dữ liệu: ${it.message}")
+                            }
+                    }
+                } else {
+                    setLoading(false)
+                    val exception = task.exception
+
+                    val errorMessage = when (exception) {
+                        is FirebaseAuthWeakPasswordException ->
+                            "Mật khẩu quá yếu (tối thiểu 6 ký tự)."
+
+                        is FirebaseAuthUserCollisionException ->
+                            "Email này đã tồn tại"
+
+                        is FirebaseAuthInvalidCredentialsException ->
+                            "Địa chỉ email không hợp lệ."
+
+                        is FirebaseNetworkException ->
+                            "Lỗi kết nối mạng. Vui lòng kiểm tra lại!"
+
+                        is FirebaseAuthException -> {
+                            val code = exception.errorCode.lowercase()
+                            if (code.contains("too-many-requests")) {
+                                "Thử quá nhiều lần. Vui lòng đợi một lát!"
+                            } else {
+                                "Đăng ký thất bại. Vui lòng thử lại sau!"
+                            }
+                        }
+
+                        else -> "Đăng ký thất bại. Vui lòng thử lại sau!"
+                    }
+
+                    showSnackbar(errorMessage)
+                }
+            }
+    }
+
+    private fun setLoading(isLoading: Boolean) {
+        binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        binding.btnRegister.isEnabled = !isLoading
+        binding.btnRegister.alpha = if (isLoading) 0.6f else 1.0f
+    }
+
+    private fun showSnackbar(message: String, isSuccess: Boolean = false) {
+        val snackbar = Snackbar.make(binding.root, message, Snackbar.LENGTH_LONG)
+        if (isSuccess) {
+            snackbar.setBackgroundTint(resources.getColor(android.R.color.holo_green_dark, null))
+        } else {
+            snackbar.setBackgroundTint(resources.getColor(android.R.color.holo_red_dark, null))
+        }
+        snackbar.show()
     }
 }

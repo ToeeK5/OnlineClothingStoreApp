@@ -43,6 +43,7 @@ class ProductAdapter(
                 btnWishlist.setOnClickListener {
                     onFavoriteClick(product)
                 }
+
             }
         }
     }

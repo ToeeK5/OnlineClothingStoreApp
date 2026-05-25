@@ -2,7 +2,11 @@
     <string name="app_name">OnlineClothingStoreApp</string>
     <string name="lumiere">LUMIÈRE</string>
     <string name="exquisite_essentials">EXQUISITE ESSENTIALS</string>
+
+    <string name="welcome_back">Chào mừng trở lại</string>
+
     <string name="DangNhap">ĐĂNG NHẬP</string>
+
     <string name="email_address">ĐỊA CHỈ EMAIL</string>
     <string name="password">MẬT KHẨU</string>
     <string name="confirm_password">XÁC NHẬN MẬT KHẨU</string>
@@ -14,10 +18,34 @@
     <string name="already_have_account">Bạn đã có tài khoản? </string>
     <string name="login">Đăng nhập</string>
 
+    <string name="DangNhap">ĐĂNG NHẬP</string>
+    <string name="txDangNhap">Đăng nhập</string>
+
     <string name="create_account_title">Tạo tài khoản</string>
     <string name="create_account_subtitle">Bước vào thế giới thời trang tối giản tinh tế.</string>
     <string name="username_label">TÊN ĐĂNG NHẬP</string>
     <string name="agree_terms">Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật.</string>
+
+
+    <!-- Firebase Auth Errors -->
+    <string name="err_invalid_email">Địa chỉ email không hợp lệ.</string>
+    <string name="err_email_already_in_use">Email này đã được sử dụng bởi một tài khoản khác.</string>
+    <string name="err_weak_password">Mật khẩu quá yếu (tối thiểu 6 ký tự).</string>
+    <string name="err_too_many_requests">Thử quá nhiều lần. Vui lòng đợi một lát!</string>
+    <string name="err_network">Lỗi kết nối mạng. Vui lòng kiểm tra lại!</string>
+    <string name="err_default">Thao tác thất bại. Vui lòng thử lại sau!</string>
+    <string name="err_empty_fields">Vui lòng nhập đầy đủ thông tin!</string>
+    <string name="err_password_not_match">Mật khẩu xác nhận không khớp!</string>
+
+    <!-- Login Specific Strings -->
+    <string name="login_success">Đăng nhập thành công!</string>
+    <string name="err_login_empty_email">Vui lòng nhập địa chỉ email</string>
+    <string name="err_login_empty_password">Vui lòng nhập mật khẩu</string>
+    <string name="err_invalid_credentials">Email hoặc mật khẩu không chính xác.</string>
+    <string name="err_user_disabled">Tài khoản của bạn đã bị vô hiệu hóa.</string>
+    <string name="err_login_failed">Lỗi đăng nhập: Vui lòng kiểm tra lại thông tin!</string>
+    <string name="err_system_error">Đăng nhập thất bại: Lỗi hệ thống.</string>
+    <string name="feature_developing">Chức năng đang được phát triển</string>
 
     <string name="tvDangKi">Đăng ký</string>
     <string name="edtTenDangNhap">Tên đăng nhập</string>
@@ -25,7 +53,7 @@
     <string name="edtMatKhau">Mật khẩu</string>
     <string name="edtXacNhanMatKhau">Xác nhận mật khẩu</string>
     <string name="btnDangKi">Đăng ký</string>
-    <string name="txDangNhap">Đăng nhập</string>
+    <string name="txDangKi">Đăng ký</string>
     <string name="edtEmailDangNhap">Email</string>
     <string name="ediMatKhauDangNhap">Mật khẩu</string>
     <string name="tvQuenMatKhau">Quên mật khẩu?</string>
