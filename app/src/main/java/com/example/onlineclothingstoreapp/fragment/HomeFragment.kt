@@ -57,12 +57,6 @@ class HomeFragment : Fragment() {
         binding.rcvCategories.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = categoryAdapter
-
-    private fun setupProducts() {
-        productAdapter = ProductAdapter { product ->
-            val intent = Intent(requireContext(), ProductDetailActivity::class.java)
-            intent.putExtra("PRODUCT_ID", product.id)
-            startActivity(intent)
         }
     }
 
