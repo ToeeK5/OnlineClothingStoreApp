@@ -2,7 +2,11 @@
     <string name="app_name">OnlineClothingStoreApp</string>
     <string name="lumiere">LUMIÈRE</string>
     <string name="exquisite_essentials">EXQUISITE ESSENTIALS</string>
+
     <string name="welcome_back">Chào mừng trở lại</string>
+
+    <string name="DangNhap">ĐĂNG NHẬP</string>
+
     <string name="email_address">ĐỊA CHỈ EMAIL</string>
     <string name="password">MẬT KHẨU</string>
     <string name="confirm_password">XÁC NHẬN MẬT KHẨU</string>
@@ -13,6 +17,7 @@
     <string name="create_account">Tạo tài khoản</string>
     <string name="already_have_account">Bạn đã có tài khoản? </string>
     <string name="login">Đăng nhập</string>
+
     <string name="DangNhap">ĐĂNG NHẬP</string>
     <string name="txDangNhap">Đăng nhập</string>
 
@@ -20,6 +25,7 @@
     <string name="create_account_subtitle">Bước vào thế giới thời trang tối giản tinh tế.</string>
     <string name="username_label">TÊN ĐĂNG NHẬP</string>
     <string name="agree_terms">Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật.</string>
+
 
     <!-- Firebase Auth Errors -->
     <string name="err_invalid_email">Địa chỉ email không hợp lệ.</string>

@@ -17,6 +17,7 @@ import com.example.onlineclothingstoreapp.adapters.ProductAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentHomeBinding
 import com.example.onlineclothingstoreapp.models.Category
 import com.example.onlineclothingstoreapp.viewmodels.ProductViewmodel
+import com.example.onlineclothingstoreapp.profile.QuanLyYeuThich
 
 class HomeFragment : Fragment() {
 
@@ -56,8 +57,6 @@ class HomeFragment : Fragment() {
         binding.rcvCategories.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = categoryAdapter
-        }
-    }
 
     private fun setupProducts() {
         productAdapter = ProductAdapter { product ->
@@ -65,6 +64,26 @@ class HomeFragment : Fragment() {
             intent.putExtra("PRODUCT_ID", product.id)
             startActivity(intent)
         }
+    }
+
+    private fun setupProducts() {
+        productAdapter = ProductAdapter(
+            onItemClick = { product ->
+                val intent = Intent(requireContext(), ProductDetailActivity::class.java)
+                intent.putExtra("PRODUCT_ID", product.id)
+                startActivity(intent)
+            },
+            onFavoriteClick = { product ->
+
+                QuanLyYeuThich.ThemYeuThich(product)
+
+                Toast.makeText(
+                    requireContext(),
+                    "Đã thêm vào danh sách yêu thích",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
 
         binding.rcvProducts.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)

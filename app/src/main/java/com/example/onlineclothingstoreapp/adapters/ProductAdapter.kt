@@ -2,7 +2,7 @@ package com.example.onlineclothingstoreapp.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
+ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.databinding.ItemProductBinding
@@ -10,9 +10,12 @@ import com.example.onlineclothingstoreapp.models.Product
 import java.text.NumberFormat
 import java.util.Locale
 
+
 class ProductAdapter(
     private var productList: MutableList<Product> = mutableListOf(),
-    private val onItemClick: (Product) -> Unit
+    private val onItemClick: (Product) -> Unit,
+    private val onFavoriteClick: (Product) -> Unit
+
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     inner class ProductViewHolder(val binding: ItemProductBinding) :
@@ -37,6 +40,10 @@ class ProductAdapter(
                 root.setOnClickListener {
                     onItemClick(product)
                 }
+                btnWishlist.setOnClickListener {
+                    onFavoriteClick(product)
+                }
+
             }
         }
     }
