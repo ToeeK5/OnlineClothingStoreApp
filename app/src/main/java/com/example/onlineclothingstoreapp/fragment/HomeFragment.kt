@@ -17,6 +17,7 @@ import com.example.onlineclothingstoreapp.adapters.ProductAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentHomeBinding
 import com.example.onlineclothingstoreapp.models.Category
 import com.example.onlineclothingstoreapp.viewmodels.ProductViewmodel
+import com.example.onlineclothingstoreapp.profile.QuanLyYeuThich
 
 class HomeFragment : Fragment() {
 
@@ -60,11 +61,23 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupProducts() {
-        productAdapter = ProductAdapter { product ->
-            val intent = Intent(requireContext(), ProductDetailActivity::class.java)
-            intent.putExtra("PRODUCT_ID", product.id)
-            startActivity(intent)
-        }
+        productAdapter = ProductAdapter(
+            onItemClick = { product ->
+                val intent = Intent(requireContext(), ProductDetailActivity::class.java)
+                intent.putExtra("PRODUCT_ID", product.id)
+                startActivity(intent)
+            },
+            onFavoriteClick = { product ->
+
+                QuanLyYeuThich.ThemYeuThich(product)
+
+                Toast.makeText(
+                    requireContext(),
+                    "Đã thêm vào danh sách yêu thích",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
 
         binding.rcvProducts.apply {
             layoutManager = GridLayoutManager(requireContext(), 2)

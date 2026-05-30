@@ -47,6 +47,10 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.google.firebase.auth.ktx)
 
+    // Google Sign-In (Thư viện bắt buộc để dùng GoogleSignInClient)
+    implementation(libs.play.services.auth)
+
+
     // AndroidX & Compose
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -76,8 +80,6 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
-
-
 
 
     implementation(libs.androidx.navigation.fragment.ktx)
