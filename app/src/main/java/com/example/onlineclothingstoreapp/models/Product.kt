@@ -8,11 +8,11 @@ data class Product(
     val name: String = "",
     val description: String = "",
     val price: Double = 0.0,
-    val imageUrl: String = "",
     val category: String = "",
     val stockQuantity: Int = 0,
     val rating: Float = 0f,
-
     val sizes: List<String> = emptyList(),
-    val colors: List<String> = emptyList()
+
+    // Trường mới thay thế cho cả colors và imageUrl cũ
+    val colorImages: Map<String, String> = emptyMap()
 )

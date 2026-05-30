@@ -31,8 +31,9 @@ class ProductAdapter(
                 txtPrice.text = formatter.format(product.price)
 
                 // Load ảnh bằng Glide
+                val imageUrl = product.colorImages.values.firstOrNull()
                 Glide.with(root.context)
-                    .load(product.imageUrl)
+                    .load(imageUrl)
                     .placeholder(R.drawable.ic_launcher_background)
                     .error(R.drawable.ic_launcher_background)
                     .into(imgProduct)

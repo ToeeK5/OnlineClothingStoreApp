@@ -61,6 +61,8 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupProducts() {
+        //productViewModel.pushproducts
+
         productAdapter = ProductAdapter(
             onItemClick = { product ->
                 val intent = Intent(requireContext(), ProductDetailActivity::class.java)
