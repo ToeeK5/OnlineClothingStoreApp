@@ -81,14 +81,10 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
-    // Feature module support for Fragments
     implementation(libs.androidx.navigation.dynamic.features.fragment)
-
-    // Testing Navigation
     androidTestImplementation(libs.androidx.navigation.testing)
-
-    // JSON serialization library, works with the Kotlin serialization plugin
     implementation(libs.kotlinx.serialization.json)
 }

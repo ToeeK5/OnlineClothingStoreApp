@@ -12,10 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineClothingStoreApp">
         <activity
-            android:name=".activities.ProductDetailActivity"
+            android:name=".activities.OrderSuccessActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ProductCategory"
+            android:name=".activities.AddressActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.ProductDetailActivity"
             android:exported="false" />
         <activity
             android:name=".activities.OrderHistoryActivity"
@@ -25,9 +28,6 @@
             android:exported="false" />
         <activity
             android:name=".activities.CheckoutActivity"
-            android:exported="false" />
-        <activity
-            android:name=".activities.ProductDetailActivity"
             android:exported="false" />
         <activity
             android:name=".activities.CartActivity"

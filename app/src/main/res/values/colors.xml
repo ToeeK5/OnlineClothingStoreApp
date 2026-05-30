@@ -13,4 +13,15 @@
     <color name="text_hint">#BDBDBD</color>
     <color name="text_label">#757575</color>
     <color name="edittext_bg">#F5F5F5</color>
+
+        <color name="bg_main">#FBF7F5</color>
+        <color name="bg_card">#FFFDFC</color>
+
+        <color name="text_dark">#202020</color>
+        <color name="text_gray">#606060</color>
+        <color name="text_light">#A5A5A5</color>
+
+        <color name="divider">#EEE7E3</color>
+        <color name="button_brown">#725F5B</color>
+        <color name="text">#202020</color>
 </resources>
