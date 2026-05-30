@@ -34,7 +34,7 @@
             <ImageView
                 android:id="@+id/imgProductLarge"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="800dp"
                 android:scaleType="centerCrop"
                 android:src="@drawable/ic_launcher_background" />
 

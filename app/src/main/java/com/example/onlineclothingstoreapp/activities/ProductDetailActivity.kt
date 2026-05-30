@@ -48,8 +48,10 @@ class ProductDetailActivity : AppCompatActivity() {
                 val formatter = NumberFormat.getCurrencyInstance(Locale("vi", "VN"))
                 binding.txtDetailPrice.text = formatter.format(it.price)
 
+                val imageURL = it.colorImages.values.firstOrNull()
+
                 Glide.with(this)
-                    .load(it.imageUrl)
+                    .load(imageURL)
                     .placeholder(R.drawable.ic_launcher_background)
                     .into(binding.imgProductLarge)
 

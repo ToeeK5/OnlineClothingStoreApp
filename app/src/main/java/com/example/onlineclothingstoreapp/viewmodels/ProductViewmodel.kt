@@ -10,4 +10,6 @@ class ProductViewmodel : ViewModel() {
 
     // ViewModel nhận dữ liệu từ Repository
     val products: LiveData<List<Product>> = repository.getAllProducts()
+
+   // val pushproducts: Unit = repository.push50ProductsToFirebase()
 }
