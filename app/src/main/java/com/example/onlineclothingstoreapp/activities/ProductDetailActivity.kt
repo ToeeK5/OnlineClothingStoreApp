@@ -44,7 +44,7 @@ class ProductDetailActivity : AppCompatActivity() {
             product?.let {
                 binding.txtDetailName.text = it.name
                 binding.txtDetailDesc.text = it.description
-                
+
                 val formatter = NumberFormat.getCurrencyInstance(Locale("vi", "VN"))
                 binding.txtDetailPrice.text = formatter.format(it.price)
 
@@ -56,8 +56,14 @@ class ProductDetailActivity : AppCompatActivity() {
                     .into(binding.imgProductLarge)
 
                 binding.btnAddToCart.setOnClickListener {
-                    Toast.makeText(this, "Đã thêm ${product.name} vào giỏ hàng", Toast.LENGTH_SHORT).show()
-                    // Xử lý logic thêm vào giỏ hàng ở đây
+                    val cartRepository = com.example.onlineclothingstoreapp.repository.CartRepository()
+                    cartRepository.addToCart("demo_user_01", product) { success ->
+                        if (success) {
+                            Toast.makeText(this, "Đã thêm ${product.name} vào giỏ hàng", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Lỗi khi thêm vào giỏ hàng", Toast.LENGTH_SHORT).show()
+                        }
+                    }
                 }
             }
         }

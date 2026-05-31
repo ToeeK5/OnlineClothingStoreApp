@@ -7,9 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.onlineclothingstoreapp.activities.CheckoutActivity
+import com.example.onlineclothingstoreapp.adapters.CartAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentCartBinding
 import com.example.onlineclothingstoreapp.models.CartItem
+import com.example.onlineclothingstoreapp.repository.CartRepository
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -18,25 +21,11 @@ class CartFragment : Fragment() {
     private var _binding: FragmentCartBinding? = null
     private val binding get() = _binding!!
 
-    private var productOne = CartItem(
-        name = "Classic Coat",
-        variant = "Size M / Brown",
-        price = 120000.0,
-        quantity = 1
-    )
+    private val cartRepository = CartRepository()
+    private lateinit var cartAdapter: CartAdapter
 
-    private var productTwo = CartItem(
-        name = "Casual Pants",
-        variant = "Size L / Black",
-        price = 80000.0,
-        quantity = 1
-    )
-
-    private var isProductOneVisible = true
-    private var isProductTwoVisible = true
-
-    private val tax = 5000.0
-    private val shippingFee = 0.0
+    private val userId = "demo_user_01"
+    private var cartList: List<CartItem> = emptyList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -44,85 +33,70 @@ class CartFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentCartBinding.inflate(inflater, container, false)
-
-        setupData()
-        setupEvents()
-        updateCartSummary()
-
         return binding.root
     }
 
-    private fun setupData() {
-        binding.txtProductOneName.text = productOne.name
-        binding.txtProductOneVariant.text = productOne.variant
-        binding.txtProductOnePrice.text = formatMoney(productOne.price)
-        binding.txtQtyProductOne.text = productOne.quantity.toString()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        binding.txtProductTwoName.text = productTwo.name
-        binding.txtProductTwoVariant.text = productTwo.variant
-        binding.txtProductTwoPrice.text = formatMoney(productTwo.price)
-        binding.txtQtyProductTwo.text = productTwo.quantity.toString()
+        setupRecyclerView()
+        setupEvents()
+
+        observeCart()
+    }
+
+    private fun setupRecyclerView() {
+        cartAdapter = CartAdapter(
+            items = emptyList(),
+            onIncrease = { item ->
+                cartRepository.increaseQuantity(userId, item.id)
+            },
+            onDecrease = { item ->
+                if (item.quantity > 1) {
+                    cartRepository.decreaseQuantity(userId, item.id)
+                } else {
+                    Toast.makeText(
+                        requireContext(),
+                        "Số lượng tối thiểu là 1",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            },
+            onDelete = { item ->
+                cartRepository.deleteCartItem(userId, item.id)
+                Toast.makeText(
+                    requireContext(),
+                    "Đã xóa sản phẩm khỏi giỏ hàng",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        )
+
+        binding.recyclerCart.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerCart.adapter = cartAdapter
     }
 
     private fun setupEvents() {
-        binding.btnPlusProductOne.setOnClickListener {
-            productOne.quantity++
-            binding.txtQtyProductOne.text = productOne.quantity.toString()
-            updateCartSummary()
-        }
-
-        binding.btnMinusProductOne.setOnClickListener {
-            if (productOne.quantity > 1) {
-                productOne.quantity--
-                binding.txtQtyProductOne.text = productOne.quantity.toString()
-                updateCartSummary()
-            }
-        }
-
-        binding.btnDeleteProductOne.setOnClickListener {
-            isProductOneVisible = false
-            binding.itemProductOne.visibility = View.GONE
-            binding.productDividerOne.visibility = View.GONE
-            updateCartSummary()
-            Toast.makeText(requireContext(), "Đã xóa sản phẩm khỏi giỏ hàng", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.btnPlusProductTwo.setOnClickListener {
-            productTwo.quantity++
-            binding.txtQtyProductTwo.text = productTwo.quantity.toString()
-            updateCartSummary()
-        }
-
-        binding.btnMinusProductTwo.setOnClickListener {
-            if (productTwo.quantity > 1) {
-                productTwo.quantity--
-                binding.txtQtyProductTwo.text = productTwo.quantity.toString()
-                updateCartSummary()
-            }
-        }
-
-        binding.btnDeleteProductTwo.setOnClickListener {
-            isProductTwoVisible = false
-            binding.itemProductTwo.visibility = View.GONE
-            binding.productDividerTwo.visibility = View.GONE
-            updateCartSummary()
-            Toast.makeText(requireContext(), "Đã xóa sản phẩm khỏi giỏ hàng", Toast.LENGTH_SHORT).show()
-        }
-
         binding.btnCheckoutNow.setOnClickListener {
-            if (!isProductOneVisible && !isProductTwoVisible) {
-                Toast.makeText(requireContext(), "Giỏ hàng đang trống", Toast.LENGTH_SHORT).show()
+            if (cartList.isEmpty()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Giỏ hàng đang trống",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
-                val subtotal = getSubtotal()
+                val subtotal = calculateSubtotal(cartList)
+                val shippingFee = 0.0
+                val tax = 0.0
                 val total = subtotal + shippingFee + tax
-                val itemCount = getItemCount()
+                val count = cartList.sumOf { it.quantity }
 
                 val intent = Intent(requireContext(), CheckoutActivity::class.java).apply {
                     putExtra(CheckoutActivity.EXTRA_SUBTOTAL, subtotal)
                     putExtra(CheckoutActivity.EXTRA_SHIPPING, shippingFee)
                     putExtra(CheckoutActivity.EXTRA_TAX, tax)
                     putExtra(CheckoutActivity.EXTRA_TOTAL, total)
-                    putExtra(CheckoutActivity.EXTRA_ITEM_COUNT, itemCount)
+                    putExtra(CheckoutActivity.EXTRA_ITEM_COUNT, count)
                 }
 
                 startActivity(intent)
@@ -130,46 +104,54 @@ class CartFragment : Fragment() {
         }
     }
 
-    private fun getSubtotal(): Double {
-        var subtotal = 0.0
+    private fun observeCart() {
+        cartRepository.getCartItems(userId).observe(viewLifecycleOwner) { items ->
+            cartList = items
+            cartAdapter.updateData(items)
 
-        if (isProductOneVisible) {
-            subtotal += productOne.price * productOne.quantity
+            if (items.isEmpty()) {
+                showEmptyCart()
+            } else {
+                showCartItems()
+                updateCartSummary(items)
+            }
         }
-
-        if (isProductTwoVisible) {
-            subtotal += productTwo.price * productTwo.quantity
-        }
-
-        return subtotal
     }
 
-    private fun getItemCount(): Int {
-        var count = 0
-
-        if (isProductOneVisible) {
-            count += productOne.quantity
-        }
-
-        if (isProductTwoVisible) {
-            count += productTwo.quantity
-        }
-
-        return count
+    private fun showEmptyCart() {
+        binding.layoutEmptyCart.visibility = View.VISIBLE
+        binding.recyclerCart.visibility = View.GONE
+        binding.orderSummaryCard.visibility = View.GONE
+        binding.secureTransactionLayout.visibility = View.GONE
+        binding.txtYourChoice.visibility = View.GONE
     }
 
-    private fun updateCartSummary() {
-        val subtotal = getSubtotal()
-        val total = if (subtotal > 0) subtotal + shippingFee + tax else 0.0
+    private fun showCartItems() {
+        binding.layoutEmptyCart.visibility = View.GONE
+        binding.recyclerCart.visibility = View.VISIBLE
+        binding.orderSummaryCard.visibility = View.VISIBLE
+        binding.secureTransactionLayout.visibility = View.VISIBLE
+        binding.txtYourChoice.visibility = View.VISIBLE
+    }
+
+    private fun calculateSubtotal(items: List<CartItem>): Double {
+        return items.sumOf { it.price * it.quantity }
+    }
+
+    private fun updateCartSummary(items: List<CartItem>) {
+        val subtotal = calculateSubtotal(items)
+        val shippingFee = 0.0
+        val tax = 0.0
+        val total = subtotal + shippingFee + tax
 
         binding.txtSubtotalValue.text = formatMoney(subtotal)
-        binding.txtTaxValue.text = if (subtotal > 0) formatMoney(tax) else formatMoney(0.0)
+        binding.txtShippingValue.text = "Miễn phí"
         binding.txtTotalValue.text = formatMoney(total)
     }
 
     private fun formatMoney(amount: Double): String {
         val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
-        return formatter.format(amount) + "đ"
+        return formatter.format(amount) + " đ"
     }
 
     override fun onDestroyView() {
