@@ -1,16 +1,26 @@
 package com.example.onlineclothingstoreapp.profile
 
 import android.content.Context
+import com.example.onlineclothingstoreapp.firebase.FirebaseService
 
 object QuanLyThongTinNguoiDung {
 
-    var tenHienThi = "Đinh Hoàng Cước"
-    var tuoi = "20"
-    var gioiTinh = "Nam"
-    var soDienThoai = "0909123456"
-    var ngaySinh = "01/01/2005"
-    var diaChi = "Tây Ninh"
-    var email = "cuoc@gmail.com"
+    var tenHienThi = "Người dùng"
+    var tuoi = ""
+    var gioiTinh = ""
+    var soDienThoai = ""
+    var ngaySinh = ""
+    var diaChi = ""
+    var email = ""
+
+    private fun LayMaNguoiDung(): String {
+        val firebaseService = FirebaseService()
+        return firebaseService.auth.currentUser?.uid ?: "guest"
+    }
+
+    private fun LayTenFileLuu(): String {
+        return "ThongTinNguoiDung_${LayMaNguoiDung()}"
+    }
 
     fun LuuThongTin(
         context: Context,
@@ -28,27 +38,68 @@ object QuanLyThongTinNguoiDung {
         ngaySinh = ngaySinhMoi
         diaChi = diaChiMoi
 
-        val pref = context.getSharedPreferences("ThongTinNguoiDung", Context.MODE_PRIVATE)
-        val editor = pref.edit()
+        val pref = context.getSharedPreferences(LayTenFileLuu(), Context.MODE_PRIVATE)
 
-        editor.putString("tenHienThi", tenHienThi)
-        editor.putString("tuoi", tuoi)
-        editor.putString("gioiTinh", gioiTinh)
-        editor.putString("soDienThoai", soDienThoai)
-        editor.putString("ngaySinh", ngaySinh)
-        editor.putString("diaChi", diaChi)
-
-        editor.apply()
+        pref.edit()
+            .putString("tenHienThi", tenHienThi)
+            .putString("tuoi", tuoi)
+            .putString("gioiTinh", gioiTinh)
+            .putString("soDienThoai", soDienThoai)
+            .putString("ngaySinh", ngaySinh)
+            .putString("diaChi", diaChi)
+            .apply()
     }
 
-    fun TaiThongTin(context: Context) {
-        val pref = context.getSharedPreferences("ThongTinNguoiDung", Context.MODE_PRIVATE)
+    fun TaiThongTin(context: Context, hoanTat: () -> Unit) {
+        val firebaseService = FirebaseService()
+        val currentUser = firebaseService.auth.currentUser
 
-        tenHienThi = pref.getString("tenHienThi", tenHienThi).toString()
-        tuoi = pref.getString("tuoi", tuoi).toString()
-        gioiTinh = pref.getString("gioiTinh", gioiTinh).toString()
-        soDienThoai = pref.getString("soDienThoai", soDienThoai).toString()
-        ngaySinh = pref.getString("ngaySinh", ngaySinh).toString()
-        diaChi = pref.getString("diaChi", diaChi).toString()
+        if (currentUser == null) {
+            tenHienThi = "Người dùng"
+            email = ""
+            hoanTat()
+            return
+        }
+
+        email = currentUser.email ?: ""
+
+        firebaseService.db.collection("users")
+            .document(currentUser.uid)
+            .get()
+            .addOnSuccessListener { document ->
+
+                val tenTrongDB =
+                    document.getString("username")
+                        ?: document.getString("name")
+                        ?: "Người dùng"
+
+                val emailTrongDB =
+                    document.getString("email") ?: email
+
+                val pref = context.getSharedPreferences(LayTenFileLuu(), Context.MODE_PRIVATE)
+
+                tenHienThi = pref.getString("tenHienThi", tenTrongDB).toString()
+                tuoi = pref.getString("tuoi", "").toString()
+                gioiTinh = pref.getString("gioiTinh", "").toString()
+                soDienThoai = pref.getString("soDienThoai", "").toString()
+                ngaySinh = pref.getString("ngaySinh", "").toString()
+                diaChi = pref.getString("diaChi", "").toString()
+                email = emailTrongDB
+
+                hoanTat()
+            }
+            .addOnFailureListener {
+
+                val pref = context.getSharedPreferences(LayTenFileLuu(), Context.MODE_PRIVATE)
+
+                tenHienThi = pref.getString("tenHienThi", "Người dùng").toString()
+                tuoi = pref.getString("tuoi", "").toString()
+                gioiTinh = pref.getString("gioiTinh", "").toString()
+                soDienThoai = pref.getString("soDienThoai", "").toString()
+                ngaySinh = pref.getString("ngaySinh", "").toString()
+                diaChi = pref.getString("diaChi", "").toString()
+
+                hoanTat()
+            }
     }
 }

@@ -117,8 +117,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="14dp"
-                android:text="LUMIÈRE là ứng dụng mua sắm thời trang dành cho giới trẻ với giao diện hiện đại và trải nghiệm đơn giản."
-                android:textColor="#76786F"
+                android:text="LUMIÈRE là ứng dụng mua sắm thời trang trực tuyến, hỗ trợ người dùng xem sản phẩm, tìm kiếm quần áo, thêm sản phẩm vào giỏ hàng, lưu danh sách yêu thích và tiến hành thanh toán đơn hàng.&#10;&#10;Ứng dụng được thiết kế với giao diện đơn giản, dễ sử dụng, phù hợp với người dùng muốn mua sắm nhanh chóng trên điện thoại. Các sản phẩm được hiển thị theo dạng danh sách, có thông tin tên sản phẩm, danh mục, giá tiền và hình ảnh minh họa.&#10;&#10;Người dùng có thể quản lý hồ sơ cá nhân, chỉnh sửa thông tin, xem danh sách sản phẩm yêu thích, điều chỉnh cài đặt cơ bản và chọn phương thức thanh toán phù hợp. Mục tiêu của ứng dụng là mô phỏng một hệ thống bán hàng quần áo cơ bản trên nền tảng Android."                android:textColor="#76786F"
                 android:textSize="14sp"
                 android:visibility="gone" />
 

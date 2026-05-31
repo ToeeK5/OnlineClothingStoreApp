@@ -1,5 +1,4 @@
 package com.example.onlineclothingstoreapp.profile
-import com.example.onlineclothingstoreapp.fragment.CartFragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,7 +9,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.onlineclothingstoreapp.R
-
+import com.example.onlineclothingstoreapp.fragment.CartFragment
+import android.content.Intent
+import com.example.onlineclothingstoreapp.activities.CheckoutActivity
 class ProfileFragment : Fragment() {
 
     private lateinit var tvAvatar: TextView
@@ -41,7 +42,6 @@ class ProfileFragment : Fragment() {
     }
 
     private fun AnhXa(view: View) {
-
         tvAvatar = view.findViewById(R.id.tvAvatar)
         tvUserName = view.findViewById(R.id.tvUserName)
         tvUserEmail = view.findViewById(R.id.tvUserEmail)
@@ -56,36 +56,29 @@ class ProfileFragment : Fragment() {
     }
 
     private fun GanDuLieu() {
+        QuanLyThongTinNguoiDung.TaiThongTin(requireContext()) {
+            tvUserName.text = QuanLyThongTinNguoiDung.tenHienThi
+            tvUserEmail.text = QuanLyThongTinNguoiDung.email
 
-        QuanLyThongTinNguoiDung.TaiThongTin(requireContext())
-
-        tvUserName.text = QuanLyThongTinNguoiDung.tenHienThi
-        tvUserEmail.text = QuanLyThongTinNguoiDung.email
-
-        tvAvatar.text =
-            QuanLyThongTinNguoiDung.tenHienThi.first().toString()
+            tvAvatar.text =
+                QuanLyThongTinNguoiDung.tenHienThi
+                    .ifEmpty { "U" }
+                    .first()
+                    .toString()
+                    .uppercase()
+        }
     }
 
     private fun SuKien() {
-
         tvAvatar.setOnClickListener {
-
-            ChuyenManHinh.MoFragment(
-                requireActivity(),
-                EditProfileFragment()
-            )
+            MoManHinhSuaThongTin()
         }
 
         btnEditProfile.setOnClickListener {
-
-            ChuyenManHinh.MoFragment(
-                requireActivity(),
-                EditProfileFragment()
-            )
+            MoManHinhSuaThongTin()
         }
 
         btnMyOrders.setOnClickListener {
-
             ChuyenManHinh.MoFragment(
                 requireActivity(),
                 CartFragment()
@@ -93,7 +86,6 @@ class ProfileFragment : Fragment() {
         }
 
         btnWishlist.setOnClickListener {
-
             ChuyenManHinh.MoFragment(
                 requireActivity(),
                 WishlistFragment()
@@ -101,7 +93,6 @@ class ProfileFragment : Fragment() {
         }
 
         btnSettings.setOnClickListener {
-
             ChuyenManHinh.MoFragment(
                 requireActivity(),
                 SettingsFragment()
@@ -110,15 +101,28 @@ class ProfileFragment : Fragment() {
 
         btnPayment.setOnClickListener {
 
-            ChuyenManHinh.MoFragment(
-                requireActivity(),
-                PaymentFragment()
-            )
+            val intent =
+                Intent(requireContext(), CheckoutActivity::class.java)
+
+            startActivity(intent)
         }
 
         btnLogout.setOnClickListener {
-
             QuanLyDangXuat.DangXuat(requireActivity())
+        }
+    }
+
+    private fun MoManHinhSuaThongTin() {
+        ChuyenManHinh.MoFragment(
+            requireActivity(),
+            EditProfileFragment()
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::tvUserName.isInitialized) {
+            GanDuLieu()
         }
     }
 }
