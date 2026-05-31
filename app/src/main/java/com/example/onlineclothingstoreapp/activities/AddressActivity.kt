@@ -100,7 +100,7 @@ class AddressActivity : AppCompatActivity() {
         }
     }
     private fun setupSwipeToDelete() {
-        val deleteIcon = ContextCompat.getDrawable(this, R.drawable.ic_delete)
+        val deleteIcon = ContextCompat.getDrawable(this, R.drawable.delete)
         val background = ColorDrawable(Color.RED)
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(

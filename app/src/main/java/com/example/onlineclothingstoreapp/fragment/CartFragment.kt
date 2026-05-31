@@ -150,7 +150,7 @@ class CartFragment : Fragment() {
     }
 
     private fun setupSwipeToDelete() {
-        val deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)
+        val deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.delete)
         val background = ColorDrawable(Color.RED)
 
         val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
