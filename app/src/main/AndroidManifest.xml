@@ -12,8 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineClothingStoreApp">
         <activity
-            android:name=".activities.OrderSuccessActivity"
+            android:name=".activities.AddAddressActivity"
             android:exported="false" />
+        <activity
+            android:name=".activities.OrderSuccessActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.AddressActivity"
             android:exported="false" />

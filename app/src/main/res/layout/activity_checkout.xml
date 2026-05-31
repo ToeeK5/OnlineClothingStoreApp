@@ -20,14 +20,12 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
                 android:id="@+id/btnCheckoutBack"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
-                android:gravity="center"
-                android:text="‹"
-                android:textColor="@color/text_dark"
-                android:textSize="36sp" />
+                android:padding="8dp"
+                android:src="@drawable/ic_arrow_back"/>
 
             <TextView
                 android:id="@+id/txtCheckoutTitle"
@@ -36,7 +34,7 @@
                 android:layout_weight="1"
                 android:fontFamily="serif"
                 android:gravity="center"
-                android:text="Checkout"
+                android:text="@string/thanh_to_n"
                 android:textColor="@color/text_dark"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -51,7 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-            android:text="Shipping Address"
+            android:text="@string/a_ch_nh_n_h_ng"
             android:textAllCaps="true"
             android:textColor="@color/text_gray"
             android:textSize="14sp"
@@ -77,7 +75,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Lê Thành Hiệp"
+                    android:text="@string/l_th_nh_hi_p"
                     android:textColor="@color/text_dark"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -87,7 +85,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="6dp"
-                    android:text="Thay đổi"
+                    android:text="@string/thay_i"
                     android:textColor="@color/text_dark"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -99,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="0901234567"
+                android:text="@string/_0901234567"
                 android:textColor="@color/text_gray"
                 android:textSize="15sp" />
 
@@ -108,7 +106,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="TP. Hồ Chí Minh, Việt Nam"
+                android:text="@string/tp_h_ch_minh_vi_t"
                 android:textColor="@color/text_gray"
                 android:textSize="15sp" />
 
@@ -118,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-            android:text="Payment Method"
+            android:text="@string/ph_ng_th_c_thanh_to_n"
             android:textAllCaps="true"
             android:textColor="@color/text_gray"
             android:textSize="14sp"
@@ -139,7 +137,7 @@
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/text_dark"
                 android:checked="true"
-                android:text="Thanh toán khi nhận hàng"
+                android:text="@string/thanh_to_n_khi_nh_n_h_ng"
                 android:textColor="@color/text_dark"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -165,26 +163,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:buttonTint="@color/text_dark"
-                android:text="Thanh toán quét mã QR"
+                android:text="@string/thanh_to_n_qu_t_m_qr"
                 android:textColor="@color/text_dark"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="34dp"
-                android:layout_marginTop="2dp"
-                android:text="Hiện tại chưa có trang QR, bấm đặt hàng sẽ báo thành công"
-                android:textColor="@color/text_gray"
-                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/txtSelectedPayment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:text="Thanh toán khi nhận hàng"
+                android:text="@string/thanh_to_n_khi_nh_n_h_ng_1"
                 android:textColor="@color/text_dark"
                 android:textSize="15sp"
                 android:textStyle="bold" />
@@ -195,7 +185,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-            android:text="Order Summary"
+            android:text="@string/t_m_g_n_n_h_ng"
             android:textAllCaps="true"
             android:textColor="@color/text_gray"
             android:textSize="14sp"
@@ -219,7 +209,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Số lượng"
+                    android:text="@string/s_l_ng"
                     android:textColor="@color/text_gray"
                     android:textSize="16sp" />
 
@@ -227,7 +217,7 @@
                     android:id="@+id/txtCheckoutItemCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2 sản phẩm"
+                    android:text="@string/soluong"
                     android:textColor="@color/text_dark"
                     android:textSize="16sp" />
 
@@ -243,7 +233,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Tạm tính"
+                    android:text="@string/t_m_t_nh"
                     android:textColor="@color/text_gray"
                     android:textSize="16sp" />
 
@@ -251,7 +241,7 @@
                     android:id="@+id/txtCheckoutSubtotal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="$200.00"
+                    android:text="@string/tam_tinh"
                     android:textColor="@color/text_dark"
                     android:textSize="16sp" />
 
@@ -267,7 +257,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Phí vận chuyển"
+                    android:text="@string/ph_v_n_chuy_n"
                     android:textColor="@color/text_gray"
                     android:textSize="16sp" />
 
@@ -275,35 +265,12 @@
                     android:id="@+id/txtCheckoutShipping"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Free"
+                    android:text="@string/loi"
                     android:textColor="@color/text_dark"
                     android:textSize="16sp" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Thuế"
-                    android:textColor="@color/text_gray"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/txtCheckoutTax"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$5.00"
-                    android:textColor="@color/text_dark"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -323,7 +290,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="serif"
-                    android:text="Tổng tiền"
+                    android:text="@string/t_ng_ti_n"
                     android:textColor="@color/text_dark"
                     android:textSize="26sp" />
 
@@ -332,7 +299,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="serif"
-                    android:text="$205.00"
+                    android:text="@string/_0"
                     android:textColor="@color/text_dark"
                     android:textSize="26sp" />
 
@@ -346,7 +313,7 @@
             android:layout_height="58dp"
             android:layout_marginTop="30dp"
             android:background="@drawable/bg_checkout_button"
-            android:text="Place Order"
+            android:text="@string/t_h_ng"
             android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold" />
