@@ -1,5 +1,6 @@
 package com.example.onlineclothingstoreapp.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onlineclothingstoreapp.R
-import android.content.Intent
 import com.example.onlineclothingstoreapp.activities.ProductDetailActivity
 import com.example.onlineclothingstoreapp.adapters.ProductAdapter
 
@@ -47,23 +47,17 @@ class WishlistFragment : Fragment() {
             GridLayoutManager(requireContext(), 2)
 
         val adapter = ProductAdapter(
-
             productList = QuanLyYeuThich.danhSachYeuThich,
-
             onItemClick = { product ->
-
-                val intent =
-                    Intent(requireContext(), ProductDetailActivity::class.java)
-
-                intent.putExtra("PRODUCT_ID", product.id)
-
+                // Đi tới trang chi tiết sản phẩm
+                val intent = Intent(requireContext(), ProductDetailActivity::class.java).apply {
+                    putExtra("PRODUCT_ID", product.id)
+                }
                 startActivity(intent)
             },
-
             onFavoriteClick = { product ->
-
+                // Xóa khỏi danh sách yêu thích
                 QuanLyYeuThich.XoaYeuThich(product)
-
                 KhoiTaoRecyclerView()
             }
         )

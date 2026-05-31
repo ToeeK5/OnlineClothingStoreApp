@@ -61,18 +61,16 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupProducts() {
-        //productViewModel.pushproducts
-
         productAdapter = ProductAdapter(
+            productList = mutableListOf(),
             onItemClick = { product ->
-                val intent = Intent(requireContext(), ProductDetailActivity::class.java)
-                intent.putExtra("PRODUCT_ID", product.id)
+                val intent = Intent(requireContext(), ProductDetailActivity::class.java).apply {
+                    putExtra("PRODUCT_ID", product.id)
+                }
                 startActivity(intent)
             },
             onFavoriteClick = { product ->
-
                 QuanLyYeuThich.ThemYeuThich(product)
-
                 Toast.makeText(
                     requireContext(),
                     "Đã thêm vào danh sách yêu thích",
