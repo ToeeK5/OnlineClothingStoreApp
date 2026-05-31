@@ -15,7 +15,13 @@ import com.example.onlineclothingstoreapp.models.CartItem
 import com.example.onlineclothingstoreapp.repository.CartRepository
 import java.text.NumberFormat
 import java.util.Locale
-
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
+import com.example.onlineclothingstoreapp.R
 class CartFragment : Fragment() {
 
     private var _binding: FragmentCartBinding? = null
@@ -62,18 +68,12 @@ class CartFragment : Fragment() {
                     ).show()
                 }
             },
-            onDelete = { item ->
-                cartRepository.deleteCartItem(userId, item.id)
-                Toast.makeText(
-                    requireContext(),
-                    "Đã xóa sản phẩm khỏi giỏ hàng",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
         )
 
         binding.recyclerCart.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerCart.adapter = cartAdapter
+
+        setupSwipeToDelete()
     }
 
     private fun setupEvents() {
@@ -147,6 +147,90 @@ class CartFragment : Fragment() {
         binding.txtSubtotalValue.text = formatMoney(subtotal)
         binding.txtShippingValue.text = "Miễn phí"
         binding.txtTotalValue.text = formatMoney(total)
+    }
+
+    private fun setupSwipeToDelete() {
+        val deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_delete)
+        val background = ColorDrawable(Color.RED)
+
+        val itemTouchHelperCallback = object : ItemTouchHelper.SimpleCallback(
+            0,
+            ItemTouchHelper.LEFT
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+
+                if (position != RecyclerView.NO_POSITION) {
+                    val item = cartAdapter.getItem(position)
+                    deleteCartItem(item)
+                }
+            }
+
+            override fun onChildDraw(
+                c: Canvas,
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                dX: Float,
+                dY: Float,
+                actionState: Int,
+                isCurrentlyActive: Boolean
+            ) {
+                val itemView = viewHolder.itemView
+
+                if (dX < 0) {
+                    background.setBounds(
+                        itemView.right + dX.toInt(),
+                        itemView.top,
+                        itemView.right,
+                        itemView.bottom
+                    )
+                    background.draw(c)
+
+                    deleteIcon?.let { icon ->
+                        val iconSize = 64
+                        val iconMargin = (itemView.height - iconSize) / 2
+
+                        val iconTop = itemView.top + iconMargin
+                        val iconBottom = iconTop + iconSize
+                        val iconLeft = itemView.right - iconMargin - iconSize
+                        val iconRight = itemView.right - iconMargin
+
+                        icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                        icon.draw(c)
+                    }
+                }
+
+                super.onChildDraw(
+                    c,
+                    recyclerView,
+                    viewHolder,
+                    dX,
+                    dY,
+                    actionState,
+                    isCurrentlyActive
+                )
+            }
+        }
+
+        ItemTouchHelper(itemTouchHelperCallback)
+            .attachToRecyclerView(binding.recyclerCart)
+    }
+
+    private fun deleteCartItem(item: CartItem) {
+        cartRepository.deleteCartItem(userId, item.id)
+        Toast.makeText(
+            requireContext(),
+            "Đã xóa sản phẩm khỏi giỏ hàng",
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun formatMoney(amount: Double): String {

@@ -17,14 +17,14 @@
         <ImageView
             android:id="@+id/ivProductImage"
             android:layout_width="96dp"
-            android:layout_height="126dp"
+            android:layout_height="140dp"
             android:background="@drawable/bg_product_image"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_placeholder" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="126dp"
+            android:layout_height="140dp"
             android:layout_marginStart="14dp"
             android:layout_weight="1"
             android:orientation="vertical">
@@ -42,17 +42,9 @@
                     android:layout_weight="1"
                     android:fontFamily="serif"
                     android:maxLines="2"
-                    android:text="Product Name"
+                    android:text="@string/product_name"
                     android:textColor="@color/text_dark"
                     android:textSize="20sp" />
-
-                <ImageView
-                    android:id="@+id/btnDelete"
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:src="@android:drawable/ic_menu_delete"
-                    android:tint="@color/text_dark"
-                    tools:ignore="UseAppTint" />
 
             </LinearLayout>
 
@@ -68,7 +60,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Size: M / Color: White"
+                    android:text="@string/size_m_color_white"
                     android:textAllCaps="true"
                     android:textColor="@color/text_gray"
                     android:textSize="13sp"
@@ -97,7 +89,7 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:text="1"
+                        android:text="@string/_1"
                         android:textColor="@color/text_dark"
                         android:textSize="15sp"
                         android:textStyle="bold" />
@@ -128,6 +120,7 @@
                 android:fontFamily="serif"
                 android:gravity="end"
                 android:text="0 đ"
+
                 android:textColor="@color/text_dark"
                 android:textSize="22sp" />
 

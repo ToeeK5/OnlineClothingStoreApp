@@ -14,7 +14,6 @@ class CartAdapter(
     private var items: List<CartItem>,
     private val onIncrease: (CartItem) -> Unit,
     private val onDecrease: (CartItem) -> Unit,
-    private val onDelete: (CartItem) -> Unit
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
     inner class CartViewHolder(val binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root)
@@ -38,7 +37,6 @@ class CartAdapter(
 
         holder.binding.btnIncrease.setOnClickListener { onIncrease(item) }
         holder.binding.btnDecrease.setOnClickListener { onDecrease(item) }
-        holder.binding.btnDelete.setOnClickListener { onDelete(item) }
     }
 
     override fun getItemCount(): Int = items.size
@@ -47,7 +45,9 @@ class CartAdapter(
         items = newItems
         notifyDataSetChanged()
     }
-
+    fun getItem(position: Int): CartItem {
+        return items[position]
+    }
     private fun formatMoney(amount: Double): String {
         val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
         return formatter.format(amount) + " đ"
