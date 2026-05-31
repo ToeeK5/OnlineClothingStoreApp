@@ -53,60 +53,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Hero Banner -->
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <!-- Carousel Banner -->
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerBanners"
                 android:layout_width="match_parent"
-                android:layout_height="500dp">
-
-                <ImageView
-                    android:id="@+id/imgBanner"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher_background" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#1A000000" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.6">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:letterSpacing="0.1"
-                        android:text="BỘ SƯU TẬP MÙA HÈ 2024"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:text="Kiên Định\nThuần Khiết"
-                        android:textColor="@color/white"
-                        android:textSize="36sp" />
-
-                    <androidx.appcompat.widget.AppCompatButton
-                        android:layout_width="wrap_content"
-                        android:layout_height="44dp"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/bg_button_black"
-                        android:paddingHorizontal="24dp"
-                        android:text="NEW COLLECTION"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
+                android:layout_height="600dp"
+                android:layout_marginVertical="16dp"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <!-- Editor's Pick Section -->
             <LinearLayout
@@ -128,6 +81,7 @@
                         android:textSize="20sp" />
 
                     <TextView
+                        android:id="@+id/txtAll"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
@@ -147,7 +101,8 @@
                     android:clipToPadding="false"
                     android:orientation="horizontal"
                     android:paddingHorizontal="12dp"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_category"/>
             </LinearLayout>
 
             <!-- New Collection Section -->
@@ -185,55 +140,6 @@
                     tools:listitem="@layout/item_product" />
             </LinearLayout>
 
-            <!-- Journal Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#F2F2F2"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="40dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="The Lumière Journal"
-                    android:textColor="@color/black"
-                    android:textSize="24sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center"
-                    android:text="Nhận các bài viết biên tập hàng tuần về phong cách sống tối giản và gợi ý phối đồ theo mùa."
-                    android:textColor="@color/text_label"
-                    android:textSize="13sp" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="32dp">
-
-                    <EditText
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_edittext_underline"
-                        android:hint="EMAIL CỦA BẠN"
-                        android:paddingVertical="8dp"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:text="JOIN"
-                        android:textColor="@color/black"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"

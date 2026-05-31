@@ -10,12 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.activities.ProductDetailActivity
+import com.example.onlineclothingstoreapp.adapters.BannerAdapter
 import com.example.onlineclothingstoreapp.adapters.CategoryAdapter
 import com.example.onlineclothingstoreapp.adapters.ProductAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentHomeBinding
-import com.example.onlineclothingstoreapp.models.Category
+import com.example.onlineclothingstoreapp.models.BannerItem
 import com.example.onlineclothingstoreapp.viewmodels.ProductViewmodel
 import com.example.onlineclothingstoreapp.profile.QuanLyYeuThich
 
@@ -39,24 +39,35 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupBannerAdapter()
         setupCategories()
         setupProducts()
         observeViewModel()
     }
 
+    private fun setupBannerAdapter() {
+
+        binding.viewPagerBanners.adapter = BannerAdapter(
+            items = mutableListOf()
+        )
+        binding.viewPagerBanners.offscreenPageLimit = 3
+    }
+
     private fun setupCategories() {
-        val categories = listOf(
-            Category("Trang phục", R.drawable.ic_launcher_background),
-            Category("Phụ kiện", R.drawable.ic_launcher_background),
-            Category("Giày", R.drawable.ic_launcher_background),
-            Category("Trang sức", R.drawable.ic_launcher_background),
-            Category("Túi xách", R.drawable.ic_launcher_background)
+        categoryAdapter = CategoryAdapter(
+            categoriesList = mutableListOf(),
+            onItemClick = { category ->
+                productViewModel.filterProductsByCategory(category.name)
+            }
         )
 
-        categoryAdapter = CategoryAdapter(categories)
         binding.rcvCategories.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
             adapter = categoryAdapter
+        }
+
+        binding.txtAll.setOnClickListener {
+            productViewModel.filterProductsByCategory("Tất cả")
         }
     }
 
@@ -87,9 +98,18 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        productViewModel.categories.observe(viewLifecycleOwner) { categories ->
+            if (categories.isNotEmpty()) {
+                categoryAdapter.updateData(categories)
+            }
+        }
         productViewModel.products.observe(viewLifecycleOwner) { products ->
-            if (products.isNotEmpty()) {
-                productAdapter.updateData(products)
+            productAdapter.updateData(products.toMutableList())
+        }
+
+        productViewModel.banners.observe(viewLifecycleOwner) { banners ->
+            if (banners.isNotEmpty()) {
+                (binding.viewPagerBanners.adapter as BannerAdapter).updateData(banners)
             }
         }
     }
