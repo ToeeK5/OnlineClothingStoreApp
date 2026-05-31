@@ -1,3 +1,21 @@
 package com.example.onlineclothingstoreapp.models
 
-//data class Order()
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentId
+
+data class Order(
+    @DocumentId
+    val id: String = "",
+    val userId: String = "",
+    val addressId: String = "",
+    val receiverName: String = "",
+    val receiverPhone: String = "",
+    val receiverAddress: String = "",
+    val paymentMethod: String = "COD",
+    val subtotal: Double = 0.0,
+    val shippingFee: Double = 0.0,
+    val tax: Double = 0.0,
+    val total: Double = 0.0,
+    val status: String = "PENDING",
+    val createdAt: Timestamp? = null
+)

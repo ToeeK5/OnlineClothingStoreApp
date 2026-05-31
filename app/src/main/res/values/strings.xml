@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OnlineClothingStoreApp</string>
+    <string name="app_name">ClothingStore</string>
     <string name="lumiere">LUMIÈRE</string>
     <string name="exquisite_essentials">EXQUISITE ESSENTIALS</string>
 
@@ -109,6 +109,37 @@
     <string name="sdt">0123 456 789</string>
     <string name="name_diachi">Lê Thành Hiệp</string>
     <string name="checkout">Checkout</string>
+    <string name="_0">0</string>
+    <string name="t_ng_ti_n">Tổng tiền</string>
+    <string name="loi">Lỗi</string>
+    <string name="ph_v_n_chuy_n">Phí vận chuyển</string>
+    <string name="tam_tinh">0</string>
+    <string name="t_m_t_nh">Tạm tính</string>
+    <string name="soluong">0</string>
+    <string name="s_l_ng">Số lượng</string>
+    <string name="t_h_ng">Đặt hàng</string>
+    <string name="l_th_nh_hi_p">Lê Thành Hiệp</string>
+    <string name="thay_i">Thay đổi</string>
+    <string name="_0901234567">0901234567</string>
+    <string name="tp_h_ch_minh_vi_t">TP. Hồ Chí Minh, Việt Nam</string>
+    <string name="thanh_to_n_qu_t_m_qr">Thanh toán quét mã QR</string>
+    <string name="thanh_to_n_khi_nh_n_h_ng_1">Thanh toán khi nhận hàng</string>
+    <string name="a_ch_nh_n_h_ng">Địa chỉ nhận hàng</string>
+    <string name="ph_ng_th_c_thanh_to_n">Phương thức thanh toán</string>
+    <string name="t_m_g_n_n_h_ng">Tóm gọn đơn hàng</string>
+    <string name="th_m_a_ch_kh_c">+ Thêm địa chỉ khác</string>
+    <string name="th_m_a_ch">Thêm địa chỉ</string>
+    <string name="h_t_n_ng_i_nh_n">Họ tên người nhận</string>
+    <string name="v_d_l_th_nh_hi_p">Ví dụ: Lê Thành Hiệp</string>
+    <string name="s_i_n_tho_i">Số điện thoại</string>
+    <string name="v_d_0901234567">Ví dụ: 0901234567</string>
+    <string name="a_ch_chi_ti_t">Địa chỉ chi tiết</string>
+    <string name="nh_p_s_nh_ng_ph_ng_x_qu_n_huy_n_t_nh_th_nh_ph">Nhập số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố</string>
+    <string name="l_u_a_ch">Lưu địa chỉ</string>
+    <string name="thanh_to_n">Thanh Toán</string>
+    <string name="product_name">Product Name</string>
+    <string name="size_m_color_white">Size: M / Color: White</string>
+    <string name="_1">1</string>
 
 
 </resources>
