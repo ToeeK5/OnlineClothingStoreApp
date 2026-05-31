@@ -1,16 +1,21 @@
 package com.example.onlineclothingstoreapp.profile
 
 import android.content.Context
+import com.example.onlineclothingstoreapp.firebase.FirebaseService
 
 object QuanLyThongTinNguoiDung {
 
-    var tenHienThi = "Đinh Hoàng Cước"
-    var tuoi = "20"
-    var gioiTinh = "Nam"
-    var soDienThoai = "0909123456"
-    var ngaySinh = "01/01/2005"
-    var diaChi = "Tây Ninh"
-    var email = "cuoc@gmail.com"
+    var tenHienThi = "Người dùng"
+    var tuoi = ""
+    var gioiTinh = ""
+    var soDienThoai = ""
+    var ngaySinh = ""
+    var diaChi = ""
+    var email = ""
+
+    private fun LayUid(): String? {
+        return FirebaseService().auth.currentUser?.uid
+    }
 
     fun LuuThongTin(
         context: Context,
@@ -21,6 +26,9 @@ object QuanLyThongTinNguoiDung {
         ngaySinhMoi: String,
         diaChiMoi: String
     ) {
+        val uid = LayUid() ?: return
+        val firebaseService = FirebaseService()
+
         tenHienThi = ten
         tuoi = tuoiMoi
         gioiTinh = gioiTinhMoi
@@ -28,27 +36,80 @@ object QuanLyThongTinNguoiDung {
         ngaySinh = ngaySinhMoi
         diaChi = diaChiMoi
 
-        val pref = context.getSharedPreferences("ThongTinNguoiDung", Context.MODE_PRIVATE)
-        val editor = pref.edit()
+        val duLieuCapNhat = hashMapOf<String, Any>(
+            "tenHienThi" to tenHienThi,
+            "tuoi" to tuoi,
+            "gioiTinh" to gioiTinh,
+            "soDienThoai" to soDienThoai,
+            "ngaySinh" to ngaySinh,
+            "diaChi" to diaChi
+        )
 
-        editor.putString("tenHienThi", tenHienThi)
-        editor.putString("tuoi", tuoi)
-        editor.putString("gioiTinh", gioiTinh)
-        editor.putString("soDienThoai", soDienThoai)
-        editor.putString("ngaySinh", ngaySinh)
-        editor.putString("diaChi", diaChi)
-
-        editor.apply()
+        firebaseService.db.collection("users")
+            .document(uid)
+            .update(duLieuCapNhat)
     }
 
-    fun TaiThongTin(context: Context) {
-        val pref = context.getSharedPreferences("ThongTinNguoiDung", Context.MODE_PRIVATE)
+    fun TaiThongTin(context: Context, hoanTat: () -> Unit) {
+        val uid = LayUid()
 
-        tenHienThi = pref.getString("tenHienThi", tenHienThi).toString()
-        tuoi = pref.getString("tuoi", tuoi).toString()
-        gioiTinh = pref.getString("gioiTinh", gioiTinh).toString()
-        soDienThoai = pref.getString("soDienThoai", soDienThoai).toString()
-        ngaySinh = pref.getString("ngaySinh", ngaySinh).toString()
-        diaChi = pref.getString("diaChi", diaChi).toString()
+        if (uid == null) {
+            tenHienThi = "Người dùng"
+            email = ""
+            hoanTat()
+            return
+        }
+
+        val firebaseService = FirebaseService()
+        val currentUser = firebaseService.auth.currentUser
+
+        email = currentUser?.email ?: ""
+
+        firebaseService.db.collection("users")
+            .document(uid)
+            .get()
+            .addOnSuccessListener { document ->
+
+                val username = document.getString("username") ?: "Người dùng"
+
+                tenHienThi =
+                    document.getString("tenHienThi")
+                        ?: username
+
+                tuoi =
+                    document.getString("tuoi")
+                        ?: ""
+
+                gioiTinh =
+                    document.getString("gioiTinh")
+                        ?: ""
+
+                soDienThoai =
+                    document.getString("soDienThoai")
+                        ?: ""
+
+                ngaySinh =
+                    document.getString("ngaySinh")
+                        ?: ""
+
+                diaChi =
+                    document.getString("diaChi")
+                        ?: ""
+
+                email =
+                    document.getString("email")
+                        ?: email
+
+                hoanTat()
+            }
+            .addOnFailureListener {
+                tenHienThi = "Người dùng"
+                tuoi = ""
+                gioiTinh = ""
+                soDienThoai = ""
+                ngaySinh = ""
+                diaChi = ""
+                hoanTat()
+            }
     }
 }

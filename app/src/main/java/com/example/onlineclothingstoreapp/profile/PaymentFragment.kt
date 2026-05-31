@@ -15,11 +15,10 @@ import com.example.onlineclothingstoreapp.R
 class PaymentFragment : Fragment() {
 
     private lateinit var btnBack: TextView
-    private lateinit var txtBalance: TextView
 
     private lateinit var radioPayment: RadioGroup
-    private lateinit var radioAppPay: RadioButton
     private lateinit var radioCOD: RadioButton
+    private lateinit var radioQR: RadioButton
 
     private lateinit var btnSavePayment: Button
 
@@ -39,63 +38,44 @@ class PaymentFragment : Fragment() {
     }
 
     private fun AnhXa(view: View) {
-
         btnBack = view.findViewById(R.id.btnBack)
 
-        txtBalance = view.findViewById(R.id.txtBalance)
-
         radioPayment = view.findViewById(R.id.radioPayment)
-        radioAppPay = view.findViewById(R.id.radioAppPay)
         radioCOD = view.findViewById(R.id.radioCOD)
+        radioQR = view.findViewById(R.id.radioQR)
 
         btnSavePayment = view.findViewById(R.id.btnSavePayment)
     }
 
     private fun GanDuLieu() {
-
-        txtBalance.text =
-            QuanLyThanhToan.LaySoDu()
-
         val phuongThuc = QuanLyThanhToan.LayPhuongThuc(requireContext())
 
-        if (phuongThuc == "Thanh toán bằng LUMIÈRE Pay") {
-
-            radioAppPay.isChecked = true
-        }
-        else {
-
+        if (phuongThuc == "Quét mã QR") {
+            radioQR.isChecked = true
+        } else {
             radioCOD.isChecked = true
         }
     }
 
     private fun SuKien() {
-
         btnBack.setOnClickListener {
-
             ChuyenManHinh.QuayLai(requireActivity())
         }
 
         btnSavePayment.setOnClickListener {
-
             LuuPhuongThucThanhToan()
         }
     }
 
     private fun LuuPhuongThucThanhToan() {
-
         val phuongThuc = when {
-
-            radioAppPay.isChecked ->
-                "Thanh toán bằng LUMIÈRE Pay"
-
-            radioCOD.isChecked ->
-                "Thanh toán khi nhận hàng"
-
-            else ->
-                "Chưa chọn"
+            radioQR.isChecked -> "Quét mã QR"
+            radioCOD.isChecked -> "Thanh toán khi nhận hàng"
+            else -> "Chưa chọn"
         }
 
         QuanLyThanhToan.LuuPhuongThuc(requireContext(), phuongThuc)
+
         Toast.makeText(
             requireContext(),
             "Đã lưu phương thức thanh toán",

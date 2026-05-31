@@ -4,32 +4,43 @@ import android.content.Context
 
 object QuanLyThanhToan {
 
-    private var soDu = "500.000đ"
-    private var phuongThucThanhToan = "Thanh toán khi nhận hàng"
-
-    fun LaySoDu(): String {
-        return soDu
-    }
+    private var phuongThuc = "Thanh toán khi nhận hàng"
 
     fun LayPhuongThuc(context: Context): String {
-        val pref = context.getSharedPreferences("ThanhToan", Context.MODE_PRIVATE)
-        phuongThucThanhToan =
-            pref.getString("phuongThuc", phuongThucThanhToan).toString()
 
-        return phuongThucThanhToan
+        val pref =
+            context.getSharedPreferences(
+                "ThanhToan",
+                Context.MODE_PRIVATE
+            )
+
+        phuongThuc =
+            pref.getString(
+                "phuongThuc",
+                phuongThuc
+            ).toString()
+
+        return phuongThuc
     }
 
-    fun LuuPhuongThuc(context: Context, phuongThuc: String) {
-        phuongThucThanhToan = phuongThuc
+    fun LuuPhuongThuc(
+        context: Context,
+        phuongThucMoi: String
+    ) {
 
-        val pref = context.getSharedPreferences("ThanhToan", Context.MODE_PRIVATE)
-        val editor = pref.edit()
+        phuongThuc = phuongThucMoi
 
-        editor.putString("phuongThuc", phuongThucThanhToan)
-        editor.apply()
-    }
+        val pref =
+            context.getSharedPreferences(
+                "ThanhToan",
+                Context.MODE_PRIVATE
+            )
 
-    fun NapTien(soTien: String) {
-        soDu = soTien
+        pref.edit()
+            .putString(
+                "phuongThuc",
+                phuongThuc
+            )
+            .apply()
     }
 }
