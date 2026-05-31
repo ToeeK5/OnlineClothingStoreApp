@@ -4,6 +4,7 @@
     <string name="exquisite_essentials">EXQUISITE ESSENTIALS</string>
 
     <string name="welcome_back">Chào mừng trở lại</string>
+    <string name="default_web_client_id">1055987581378-e062r382cphls3hspctj3lags5cgu6je.apps.googleusercontent.com</string>
 
     <string name="DangNhap">ĐĂNG NHẬP</string>
 
@@ -108,6 +109,7 @@
     <string name="sdt">0123 456 789</string>
     <string name="name_diachi">Lê Thành Hiệp</string>
     <string name="checkout">Checkout</string>
+
 
 </resources>
 

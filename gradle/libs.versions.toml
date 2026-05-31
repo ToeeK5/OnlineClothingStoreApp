@@ -22,9 +22,6 @@ legacySupportV4 = "1.0.0"
 lifecycleLivedataKtx = "2.8.2"
 lifecycleViewmodelKtx = "2.8.2"
 fragmentKtx = "1.8.5"
-lifecycleLivedataKtx = "2.10.0"
-lifecycleViewmodelKtx = "2.10.0"
-fragmentKtx = "1.8.9"
 playServicesAuth = "21.5.1"
 
 [libraries]
