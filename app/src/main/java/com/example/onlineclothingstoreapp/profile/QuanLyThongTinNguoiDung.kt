@@ -13,13 +13,8 @@ object QuanLyThongTinNguoiDung {
     var diaChi = ""
     var email = ""
 
-    private fun LayMaNguoiDung(): String {
-        val firebaseService = FirebaseService()
-        return firebaseService.auth.currentUser?.uid ?: "guest"
-    }
-
-    private fun LayTenFileLuu(): String {
-        return "ThongTinNguoiDung_${LayMaNguoiDung()}"
+    private fun LayUid(): String? {
+        return FirebaseService().auth.currentUser?.uid
     }
 
     fun LuuThongTin(
@@ -31,6 +26,9 @@ object QuanLyThongTinNguoiDung {
         ngaySinhMoi: String,
         diaChiMoi: String
     ) {
+        val uid = LayUid() ?: return
+        val firebaseService = FirebaseService()
+
         tenHienThi = ten
         tuoi = tuoiMoi
         gioiTinh = gioiTinhMoi
@@ -38,67 +36,79 @@ object QuanLyThongTinNguoiDung {
         ngaySinh = ngaySinhMoi
         diaChi = diaChiMoi
 
-        val pref = context.getSharedPreferences(LayTenFileLuu(), Context.MODE_PRIVATE)
+        val duLieuCapNhat = hashMapOf<String, Any>(
+            "tenHienThi" to tenHienThi,
+            "tuoi" to tuoi,
+            "gioiTinh" to gioiTinh,
+            "soDienThoai" to soDienThoai,
+            "ngaySinh" to ngaySinh,
+            "diaChi" to diaChi
+        )
 
-        pref.edit()
-            .putString("tenHienThi", tenHienThi)
-            .putString("tuoi", tuoi)
-            .putString("gioiTinh", gioiTinh)
-            .putString("soDienThoai", soDienThoai)
-            .putString("ngaySinh", ngaySinh)
-            .putString("diaChi", diaChi)
-            .apply()
+        firebaseService.db.collection("users")
+            .document(uid)
+            .update(duLieuCapNhat)
     }
 
     fun TaiThongTin(context: Context, hoanTat: () -> Unit) {
-        val firebaseService = FirebaseService()
-        val currentUser = firebaseService.auth.currentUser
+        val uid = LayUid()
 
-        if (currentUser == null) {
+        if (uid == null) {
             tenHienThi = "Người dùng"
             email = ""
             hoanTat()
             return
         }
 
-        email = currentUser.email ?: ""
+        val firebaseService = FirebaseService()
+        val currentUser = firebaseService.auth.currentUser
+
+        email = currentUser?.email ?: ""
 
         firebaseService.db.collection("users")
-            .document(currentUser.uid)
+            .document(uid)
             .get()
             .addOnSuccessListener { document ->
 
-                val tenTrongDB =
-                    document.getString("username")
-                        ?: document.getString("name")
-                        ?: "Người dùng"
+                val username = document.getString("username") ?: "Người dùng"
 
-                val emailTrongDB =
-                    document.getString("email") ?: email
+                tenHienThi =
+                    document.getString("tenHienThi")
+                        ?: username
 
-                val pref = context.getSharedPreferences(LayTenFileLuu(), Context.MODE_PRIVATE)
+                tuoi =
+                    document.getString("tuoi")
+                        ?: ""
 
-                tenHienThi = pref.getString("tenHienThi", tenTrongDB).toString()
-                tuoi = pref.getString("tuoi", "").toString()
-                gioiTinh = pref.getString("gioiTinh", "").toString()
-                soDienThoai = pref.getString("soDienThoai", "").toString()
-                ngaySinh = pref.getString("ngaySinh", "").toString()
-                diaChi = pref.getString("diaChi", "").toString()
-                email = emailTrongDB
+                gioiTinh =
+                    document.getString("gioiTinh")
+                        ?: ""
+
+                soDienThoai =
+                    document.getString("soDienThoai")
+                        ?: ""
+
+                ngaySinh =
+                    document.getString("ngaySinh")
+                        ?: ""
+
+                diaChi =
+                    document.getString("diaChi")
+                        ?: ""
+
+                email =
+                    document.getString("email")
+                        ?: email
 
                 hoanTat()
             }
             .addOnFailureListener {
-
-                val pref = context.getSharedPreferences(LayTenFileLuu(), Context.MODE_PRIVATE)
-
-                tenHienThi = pref.getString("tenHienThi", "Người dùng").toString()
-                tuoi = pref.getString("tuoi", "").toString()
-                gioiTinh = pref.getString("gioiTinh", "").toString()
-                soDienThoai = pref.getString("soDienThoai", "").toString()
-                ngaySinh = pref.getString("ngaySinh", "").toString()
-                diaChi = pref.getString("diaChi", "").toString()
-
+                tenHienThi = "Người dùng"
+                tuoi = ""
+                gioiTinh = ""
+                soDienThoai = ""
+                ngaySinh = ""
+                diaChi = ""
                 hoanTat()
             }
     }
