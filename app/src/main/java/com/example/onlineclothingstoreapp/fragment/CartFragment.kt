@@ -145,7 +145,6 @@ class CartFragment : Fragment() {
         val total = subtotal + shippingFee + tax
 
         binding.txtSubtotalValue.text = formatMoney(subtotal)
-        binding.txtShippingValue.text = "Miễn phí"
         binding.txtTotalValue.text = formatMoney(total)
     }
 

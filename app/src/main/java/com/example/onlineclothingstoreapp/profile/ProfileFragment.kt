@@ -1,6 +1,6 @@
 package com.example.onlineclothingstoreapp.profile
-import com.example.onlineclothingstoreapp.fragment.CartFragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.onlineclothingstoreapp.R
+import com.example.onlineclothingstoreapp.activities.OrderHistoryActivity
 
 class ProfileFragment : Fragment() {
 
@@ -41,7 +42,6 @@ class ProfileFragment : Fragment() {
     }
 
     private fun AnhXa(view: View) {
-
         tvAvatar = view.findViewById(R.id.tvAvatar)
         tvUserName = view.findViewById(R.id.tvUserName)
         tvUserEmail = view.findViewById(R.id.tvUserEmail)
@@ -56,20 +56,20 @@ class ProfileFragment : Fragment() {
     }
 
     private fun GanDuLieu() {
-
         QuanLyThongTinNguoiDung.TaiThongTin(requireContext())
 
         tvUserName.text = QuanLyThongTinNguoiDung.tenHienThi
         tvUserEmail.text = QuanLyThongTinNguoiDung.email
 
-        tvAvatar.text =
+        tvAvatar.text = if (QuanLyThongTinNguoiDung.tenHienThi.isNotBlank()) {
             QuanLyThongTinNguoiDung.tenHienThi.first().toString()
+        } else {
+            "U"
+        }
     }
 
     private fun SuKien() {
-
         tvAvatar.setOnClickListener {
-
             ChuyenManHinh.MoFragment(
                 requireActivity(),
                 EditProfileFragment()
@@ -77,7 +77,6 @@ class ProfileFragment : Fragment() {
         }
 
         btnEditProfile.setOnClickListener {
-
             ChuyenManHinh.MoFragment(
                 requireActivity(),
                 EditProfileFragment()
@@ -85,15 +84,11 @@ class ProfileFragment : Fragment() {
         }
 
         btnMyOrders.setOnClickListener {
-
-            ChuyenManHinh.MoFragment(
-                requireActivity(),
-                CartFragment()
-            )
+            val intent = Intent(requireContext(), OrderHistoryActivity::class.java)
+            startActivity(intent)
         }
 
         btnWishlist.setOnClickListener {
-
             ChuyenManHinh.MoFragment(
                 requireActivity(),
                 WishlistFragment()
@@ -101,7 +96,6 @@ class ProfileFragment : Fragment() {
         }
 
         btnSettings.setOnClickListener {
-
             ChuyenManHinh.MoFragment(
                 requireActivity(),
                 SettingsFragment()
@@ -109,7 +103,6 @@ class ProfileFragment : Fragment() {
         }
 
         btnPayment.setOnClickListener {
-
             ChuyenManHinh.MoFragment(
                 requireActivity(),
                 PaymentFragment()
@@ -117,7 +110,6 @@ class ProfileFragment : Fragment() {
         }
 
         btnLogout.setOnClickListener {
-
             QuanLyDangXuat.DangXuat(requireActivity())
         }
     }

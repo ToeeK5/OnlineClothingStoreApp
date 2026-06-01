@@ -16,6 +16,9 @@ data class Order(
     val shippingFee: Double = 0.0,
     val tax: Double = 0.0,
     val total: Double = 0.0,
-    val status: String = "PENDING",
+
+    // Trạng thái giờ sẽ lấy từ collection order_statuses
+    val statusId: String = "PENDING",
+
     val createdAt: Timestamp? = null
 )

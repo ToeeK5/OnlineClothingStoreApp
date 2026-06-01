@@ -111,6 +111,34 @@
                 android:textSize="15sp" />
 
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/layoutCheckoutProducts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:background="@drawable/bg_summary_card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:id="@+id/txtCheckoutProductsTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/s_n_ph_m"
+                android:textColor="@color/text_dark"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerCheckoutProducts"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -147,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="34dp"
                 android:layout_marginTop="2dp"
-                android:text="Trả tiền mặt sau khi nhận được hàng"
+                android:text="@string/tr_ti_n_m_t_sau_khi_nh_n_c_h_ng"
                 android:textColor="@color/text_gray"
                 android:textSize="14sp" />
 
@@ -168,6 +196,32 @@
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
+            <LinearLayout
+                android:id="@+id/layoutQrDiscount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/gi_m_gi_qr_10"
+                    android:textColor="@color/text_gray"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/txtCheckoutDiscount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_0ddd"
+                    android:textColor="@color/text_dark"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/txtSelectedPayment"
@@ -180,6 +234,7 @@
                 android:textStyle="bold" />
 
         </RadioGroup>
+
 
         <TextView
             android:layout_width="match_parent"
@@ -246,32 +301,6 @@
                     android:textSize="16sp" />
 
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/ph_v_n_chuy_n"
-                    android:textColor="@color/text_gray"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/txtCheckoutShipping"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/loi"
-                    android:textColor="@color/text_dark"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -294,14 +323,32 @@
                     android:textColor="@color/text_dark"
                     android:textSize="26sp" />
 
-                <TextView
-                    android:id="@+id/txtCheckoutTotal"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="serif"
-                    android:text="@string/_0"
-                    android:textColor="@color/text_dark"
-                    android:textSize="26sp" />
+                    android:gravity="end"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtCheckoutOriginalTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="serif"
+                        android:text="@string/_0_d"
+                        android:textColor="@color/text_gray"
+                        android:textSize="16sp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/txtCheckoutTotal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="serif"
+                        android:text="@string/_00d"
+                        android:textColor="@color/text_dark"
+                        android:textSize="26sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
