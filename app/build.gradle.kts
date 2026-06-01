@@ -87,4 +87,8 @@ dependencies {
     implementation(libs.androidx.navigation.dynamic.features.fragment)
     androidTestImplementation(libs.androidx.navigation.testing)
     implementation(libs.kotlinx.serialization.json)
+    implementation("androidx.startup:startup-runtime:1.1.1")
+    implementation("androidx.emoji2:emoji2:1.4.0")
+    implementation("androidx.emoji2:emoji2-views:1.4.0")
+    implementation("androidx.emoji2:emoji2-views-helper:1.4.0")
 }
