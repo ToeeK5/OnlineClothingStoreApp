@@ -22,6 +22,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onlineclothingstoreapp.R
+import com.google.firebase.auth.FirebaseAuth // Thêm thư viện Firebase Auth này vào
+
 class CartFragment : Fragment() {
 
     private var _binding: FragmentCartBinding? = null
@@ -30,7 +32,10 @@ class CartFragment : Fragment() {
     private val cartRepository = CartRepository()
     private lateinit var cartAdapter: CartAdapter
 
-    private val userId = "demo_user_01"
+    // 1. THAY ĐỔI: Sử dụng hàm getter để lấy ID động mỗi lần cần dùng
+    private val currentUserId: String?
+        get() = FirebaseAuth.getInstance().currentUser?.uid
+
     private var cartList: List<CartItem> = emptyList()
 
     override fun onCreateView(
@@ -45,13 +50,21 @@ class CartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupRecyclerView()
-        setupEvents()
+        // 2. THAY ĐỔI: Kiểm tra xem người dùng đã đăng nhập chưa trước khi load dữ liệu
+        val userId = currentUserId
+        if (userId == null) {
+            showEmptyCart()
+            Toast.makeText(requireContext(), "Vui lòng đăng nhập để xem giỏ hàng", Toast.LENGTH_SHORT).show()
+            return
+        }
 
-        observeCart()
+        setupRecyclerView(userId) // Truyền userId vào cấu hình RecyclerView
+        setupEvents()
+        observeCart(userId)       // Truyền userId vào để theo dõi đúng giỏ hàng
     }
 
-    private fun setupRecyclerView() {
+    // 3. THAY ĐỔI: Nhận userId động để gọi hàm xử lý tăng/giảm số lượng
+    private fun setupRecyclerView(userId: String) {
         cartAdapter = CartAdapter(
             items = emptyList(),
             onIncrease = { item ->
@@ -73,7 +86,7 @@ class CartFragment : Fragment() {
         binding.recyclerCart.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerCart.adapter = cartAdapter
 
-        setupSwipeToDelete()
+        setupSwipeToDelete(userId) // Truyền tiếp xuống cho chức năng vuốt để xóa
     }
 
     private fun setupEvents() {
@@ -104,7 +117,8 @@ class CartFragment : Fragment() {
         }
     }
 
-    private fun observeCart() {
+    // 4. THAY ĐỔI: Nhận userId động để lắng nghe sự thay đổi giỏ hàng từ Firebase
+    private fun observeCart(userId: String) {
         cartRepository.getCartItems(userId).observe(viewLifecycleOwner) { items ->
             cartList = items
             cartAdapter.updateData(items)
@@ -148,7 +162,8 @@ class CartFragment : Fragment() {
         binding.txtTotalValue.text = formatMoney(total)
     }
 
-    private fun setupSwipeToDelete() {
+    // 5. THAY ĐỔI: Nhận userId để biết cần xóa sản phẩm ở giỏ hàng của ai
+    private fun setupSwipeToDelete(userId: String) {
         val deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.delete)
         val background = ColorDrawable(Color.RED)
 
@@ -169,7 +184,7 @@ class CartFragment : Fragment() {
 
                 if (position != RecyclerView.NO_POSITION) {
                     val item = cartAdapter.getItem(position)
-                    deleteCartItem(item)
+                    deleteCartItem(userId, item) // Truyền thêm userId vào đây
                 }
             }
 
@@ -223,7 +238,8 @@ class CartFragment : Fragment() {
             .attachToRecyclerView(binding.recyclerCart)
     }
 
-    private fun deleteCartItem(item: CartItem) {
+    // 6. THAY ĐỔI: Truyền userId thực tế vào hàm delete của Repository
+    private fun deleteCartItem(userId: String, item: CartItem) {
         cartRepository.deleteCartItem(userId, item.id)
         Toast.makeText(
             requireContext(),

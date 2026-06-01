@@ -8,16 +8,55 @@
     tools:context=".activities.ProductDetailActivity">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.MaterialComponents.ActionBar">
+        android:background="@color/white"
+        app:elevation="0dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="@android:drawable/ic_menu_revert"
-            app:title="Chi tiết sản phẩm" />
+            android:background="@color/white"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="16dp">
+
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/back_svgrepo_com"
+                    app:tint="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="serif"
+                    android:letterSpacing="0.2"
+                    android:text="LUMIÈRE"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btnCart"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_cart"
+                    app:tint="@color/black" />
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.core.widget.NestedScrollView
@@ -29,14 +68,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="80dp">
+            android:paddingBottom="100dp">
 
-            <ImageView
-                android:id="@+id/imgProductLarge"
+            <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="600dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/ic_launcher_background" />
+                android:layout_height="600dp">
+
+                <ImageView
+                    android:id="@+id/imgProductLarge"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_launcher_background" />
+            </FrameLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -48,45 +92,58 @@
                     android:id="@+id/txtDetailName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-black"
-                    android:text="Tên sản phẩm"
-                    android:textColor="#212121"
-                    android:textSize="24sp" />
+                    android:fontFamily="serif"
+                    android:textColor="#121212"
+                    android:textSize="26sp" />
 
                 <TextView
                     android:id="@+id/txtDetailPrice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="0đ"
-                    android:textColor="#E91E63"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
-
-                <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="16dp"
-                    android:background="#EEEEEE" />
+                    android:layout_height="wrap_content"
+                    android:fontFamily="serif"
+                    android:textColor="#705B5A"
+                    android:textSize="22sp"
+                    android:layout_marginTop="8dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="sans-serif-medium"
-                    android:text="Mô tả sản phẩm"
-                    android:textColor="#212121"
-                    android:textSize="18sp" />
+                    android:text="MÀU"
+                    android:layout_marginTop="24dp"
+                    android:textColor="#121212"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/colorContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:text="CHỌN KÍCH CỠ"
+                    android:textColor="#121212"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:id="@+id/sizeContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="12dp" />
 
                 <TextView
                     android:id="@+id/txtDetailDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:lineSpacingExtra="4dp"
-                    android:text="Mô tả chi tiết ở đây..."
-                    android:textColor="#757575"
+                    android:layout_marginTop="24dp"
+                    android:textColor="#555555"
                     android:textSize="14sp" />
-
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
@@ -95,23 +152,33 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="16dp">
-
+        app:cardElevation="16dp"
+        app:cardBackgroundColor="@color/white">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
+            android:padding="16dp"
+            android:orientation="horizontal">
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAddToCart"
-                style="@style/Widget.MaterialComponents.Button"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="56dp"
-                android:text="THÊM VÀO GIỎ HÀNG"
-                app:cornerRadius="8dp" />
-
+                android:text="ADD TO CART"
+                android:backgroundTint="#121212" />
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnFavorite"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginStart="16dp"
+                android:clickable="true"
+                android:focusable="true">
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_heart_outline" />
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

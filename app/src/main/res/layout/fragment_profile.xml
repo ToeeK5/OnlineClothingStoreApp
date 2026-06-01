@@ -1,158 +1,206 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FCF9F8"
-    android:fillViewport="true"
-    tools:context=".profile.ProfileFragment">
+    android:background="#FCF9F8">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:background="@color/white"
+        app:elevation="0dp">
 
-        <TextView
-            android:id="@+id/tvBrandName"
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/white"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:navigationIcon="@null">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingHorizontal="16dp">
+
+                <ImageView
+                    android:id="@+id/btnBack"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/back_svgrepo_com"
+                    app:tint="@color/black" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:fontFamily="serif"
+                    android:letterSpacing="0.2"
+                    android:text="LUMIÈRE"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btnCart"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_cart"
+                    app:tint="@color/black" />
+            </RelativeLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        android:fillViewport="true"
+        tools:context=".profile.ProfileFragment">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:letterSpacing="0.08"
-            android:paddingBottom="32dp"
-            android:text="LUMIÈRE"
-            android:textAlignment="center"
-            android:textColor="#1B1C1C"
-            android:textSize="32sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvAvatar"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_gravity="center"
-            android:background="@drawable/bg_avatar_circle"
-            android:clickable="true"
-            android:focusable="true"
-            android:gravity="center"
-            android:text="C"
-            android:textColor="#FFFFFF"
-            android:textSize="42sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvUserName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:text="Đinh Hoàng Cước"
-            android:textAlignment="center"
-            android:textColor="#1B1C1C"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvUserEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="18dp"
-            android:text="cuoc@example.com"
-            android:textAlignment="center"
-            android:textColor="#76786F"
-            android:textSize="15sp" />
-
-        <Button
-            android:id="@+id/btnEditProfile"
-            android:layout_width="180dp"
-            android:layout_height="48dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="32dp"
-            android:background="@drawable/bg_button_primary"
-            android:text="SỬA THÔNG TIN"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:id="@+id/btnMyOrders"
-            style="@style/ProfileMenuItem">
+            android:orientation="vertical"
+            android:padding="24dp">
 
             <TextView
-                style="@style/ProfileIcon"
-                android:text="📦" />
+                android:id="@+id/tvAvatar"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:background="@drawable/bg_avatar_circle"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:text="C"
+                android:textColor="#FFFFFF"
+                android:textSize="42sp"
+                android:textStyle="bold" />
 
             <TextView
-                style="@style/ProfileMenuText"
-                android:text="ĐƠN HÀNG CỦA TÔI" />
+                android:id="@+id/tvUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:text="Đinh Hoàng Cước"
+                android:textAlignment="center"
+                android:textColor="#1B1C1C"
+                android:textSize="24sp"
+                android:textStyle="bold" />
 
             <TextView
-                style="@style/ProfileArrow"
-                android:text="›" />
+                android:id="@+id/tvUserEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="18dp"
+                android:text="cuoc@example.com"
+                android:textAlignment="center"
+                android:textColor="#76786F"
+                android:textSize="15sp" />
+
+            <Button
+                android:id="@+id/btnEditProfile"
+                android:layout_width="180dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="32dp"
+                android:background="@drawable/bg_button_primary"
+                android:text="SỬA THÔNG TIN"
+                android:textColor="#FFFFFF"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:id="@+id/btnMyOrders"
+                style="@style/ProfileMenuItem">
+
+                <TextView
+                    style="@style/ProfileIcon"
+                    android:text="📦" />
+
+                <TextView
+                    style="@style/ProfileMenuText"
+                    android:text="ĐƠN HÀNG CỦA TÔI" />
+
+                <TextView
+                    style="@style/ProfileArrow"
+                    android:text="›" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnWishlist"
+                style="@style/ProfileMenuItem">
+
+                <TextView
+                    style="@style/ProfileIcon"
+                    android:text="♡" />
+
+                <TextView
+                    style="@style/ProfileMenuText"
+                    android:text="DANH SÁCH YÊU THÍCH" />
+
+                <TextView
+                    style="@style/ProfileArrow"
+                    android:text="›" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnSettings"
+                style="@style/ProfileMenuItem">
+
+                <TextView
+                    style="@style/ProfileIcon"
+                    android:text="⚙" />
+
+                <TextView
+                    style="@style/ProfileMenuText"
+                    android:text="CÀI ĐẶT" />
+
+                <TextView
+                    style="@style/ProfileArrow"
+                    android:text="›" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btnPayment"
+                style="@style/ProfileMenuItem">
+
+                <TextView
+                    style="@style/ProfileIcon"
+                    android:text="💳" />
+
+                <TextView
+                    style="@style/ProfileMenuText"
+                    android:text="PHƯƠNG THỨC THANH TOÁN" />
+
+                <TextView
+                    style="@style/ProfileArrow"
+                    android:text="›" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btnLogout"
+                android:layout_width="220dp"
+                android:layout_height="52dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="42dp"
+                android:background="@drawable/bg_logout_button"
+                android:text="LOG OUT"
+                android:textColor="#FFFFFF"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/btnWishlist"
-            style="@style/ProfileMenuItem">
+    </androidx.core.widget.NestedScrollView>
 
-            <TextView
-                style="@style/ProfileIcon"
-                android:text="♡" />
-
-            <TextView
-                style="@style/ProfileMenuText"
-                android:text="DANH SÁCH YÊU THÍCH" />
-
-            <TextView
-                style="@style/ProfileArrow"
-                android:text="›" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btnSettings"
-            style="@style/ProfileMenuItem">
-
-            <TextView
-                style="@style/ProfileIcon"
-                android:text="⚙" />
-
-            <TextView
-                style="@style/ProfileMenuText"
-                android:text="CÀI ĐẶT" />
-
-            <TextView
-                style="@style/ProfileArrow"
-                android:text="›" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/btnPayment"
-            style="@style/ProfileMenuItem">
-
-            <TextView
-                style="@style/ProfileIcon"
-                android:text="💳" />
-
-            <TextView
-                style="@style/ProfileMenuText"
-                android:text="PHƯƠNG THỨC THANH TOÁN" />
-
-            <TextView
-                style="@style/ProfileArrow"
-                android:text="›" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="220dp"
-            android:layout_height="52dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="42dp"
-            android:background="@drawable/bg_logout_button"
-            android:text="LOG OUT"
-            android:textColor="#FFFFFF"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
-</androidx.core.widget.NestedScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
