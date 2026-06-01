@@ -28,7 +28,9 @@ class WishlistFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_wishlist, container, false)
 
         AnhXa(view)
-        KhoiTaoRecyclerView()
+        QuanLyYeuThich.TaiDanhSachYeuThich {
+            KhoiTaoRecyclerView()
+        }
         SuKien()
 
         return view
@@ -56,9 +58,9 @@ class WishlistFragment : Fragment() {
                 startActivity(intent)
             },
             onFavoriteClick = { product ->
-                // Xóa khỏi danh sách yêu thích
-                QuanLyYeuThich.XoaYeuThich(product)
-                KhoiTaoRecyclerView()
+                QuanLyYeuThich.XoaYeuThich(product) {
+                    KhoiTaoRecyclerView()
+                }
             }
         )
 

@@ -14,7 +14,6 @@ import com.example.onlineclothingstoreapp.R
 class EditProfileFragment : Fragment() {
 
     private lateinit var btnBack: TextView
-
     private lateinit var imgAvatar: TextView
 
     private lateinit var edtDisplayName: EditText
@@ -38,6 +37,7 @@ class EditProfileFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_edit_profile, container, false)
 
         AnhXa(view)
+        TatCheDoChinhSua()
         GanDuLieu()
         SuKien()
 
@@ -45,9 +45,7 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun AnhXa(view: View) {
-
         btnBack = view.findViewById(R.id.btnBack)
-
         imgAvatar = view.findViewById(R.id.imgAvatar)
 
         edtDisplayName = view.findViewById(R.id.edtDisplayName)
@@ -64,46 +62,50 @@ class EditProfileFragment : Fragment() {
     }
 
     private fun GanDuLieu() {
+        QuanLyThongTinNguoiDung.TaiThongTin(requireContext()) {
+            edtDisplayName.setText(QuanLyThongTinNguoiDung.tenHienThi)
+            edtAge.setText(QuanLyThongTinNguoiDung.tuoi)
+            edtGender.setText(QuanLyThongTinNguoiDung.gioiTinh)
+            edtPhone.setText(QuanLyThongTinNguoiDung.soDienThoai)
+            edtBirthday.setText(QuanLyThongTinNguoiDung.ngaySinh)
+            edtAddress.setText(QuanLyThongTinNguoiDung.diaChi)
 
-        QuanLyThongTinNguoiDung.TaiThongTin(requireContext())
-
-        edtDisplayName.setText(QuanLyThongTinNguoiDung.tenHienThi)
-        edtAge.setText(QuanLyThongTinNguoiDung.tuoi)
-        edtGender.setText(QuanLyThongTinNguoiDung.gioiTinh)
-        edtPhone.setText(QuanLyThongTinNguoiDung.soDienThoai)
-        edtBirthday.setText(QuanLyThongTinNguoiDung.ngaySinh)
-        edtAddress.setText(QuanLyThongTinNguoiDung.diaChi)
+            imgAvatar.text =
+                QuanLyThongTinNguoiDung.tenHienThi
+                    .ifEmpty { "U" }
+                    .first()
+                    .toString()
+                    .uppercase()
+        }
     }
 
     private fun SuKien() {
-
         btnEnableEdit.setOnClickListener {
-
             BatCheDoChinhSua()
         }
 
         btnSave.setOnClickListener {
-
             LuuThongTin()
         }
 
         btnCancel.setOnClickListener {
-
             ChuyenManHinh.QuayLai(requireActivity())
         }
 
         btnBack.setOnClickListener {
-
             ChuyenManHinh.QuayLai(requireActivity())
         }
 
         btnChangeAvatar.setOnClickListener {
-
+            Toast.makeText(
+                requireContext(),
+                "Chức năng đổi avatar đang phát triển",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
     private fun BatCheDoChinhSua() {
-
         edtDisplayName.isEnabled = true
         edtAge.isEnabled = true
         edtGender.isEnabled = true
@@ -114,8 +116,18 @@ class EditProfileFragment : Fragment() {
         btnSave.isEnabled = true
     }
 
-    private fun LuuThongTin() {
+    private fun TatCheDoChinhSua() {
+        edtDisplayName.isEnabled = false
+        edtAge.isEnabled = false
+        edtGender.isEnabled = false
+        edtPhone.isEnabled = false
+        edtBirthday.isEnabled = false
+        edtAddress.isEnabled = false
 
+        btnSave.isEnabled = false
+    }
+
+    private fun LuuThongTin() {
         QuanLyThongTinNguoiDung.LuuThongTin(
             requireContext(),
             edtDisplayName.text.toString(),
@@ -134,7 +146,4 @@ class EditProfileFragment : Fragment() {
 
         ChuyenManHinh.QuayLai(requireActivity())
     }
-
-
-
 }

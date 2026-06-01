@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.activities.OrderHistoryActivity
+import com.example.onlineclothingstoreapp.activities.CheckoutActivity
 
 class ProfileFragment : Fragment() {
 
@@ -31,7 +32,6 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         AnhXa(view)
@@ -56,33 +56,30 @@ class ProfileFragment : Fragment() {
     }
 
     private fun GanDuLieu() {
-        QuanLyThongTinNguoiDung.TaiThongTin(requireContext())
+        // Giữ cách gọi Callback bất đồng bộ của main để tránh lỗi hiển thị dữ liệu
+        QuanLyThongTinNguoiDung.TaiThongTin(requireContext()) {
+            tvUserName.text = QuanLyThongTinNguoiDung.tenHienThi
+            tvUserEmail.text = QuanLyThongTinNguoiDung.email
 
-        tvUserName.text = QuanLyThongTinNguoiDung.tenHienThi
-        tvUserEmail.text = QuanLyThongTinNguoiDung.email
-
-        tvAvatar.text = if (QuanLyThongTinNguoiDung.tenHienThi.isNotBlank()) {
-            QuanLyThongTinNguoiDung.tenHienThi.first().toString()
-        } else {
-            "U"
+            tvAvatar.text =
+                QuanLyThongTinNguoiDung.tenHienThi
+                    .ifEmpty { "U" }
+                    .first()
+                    .toString()
+                    .uppercase()
         }
     }
 
     private fun SuKien() {
         tvAvatar.setOnClickListener {
-            ChuyenManHinh.MoFragment(
-                requireActivity(),
-                EditProfileFragment()
-            )
+            MoManHinhSuaThongTin()
         }
 
         btnEditProfile.setOnClickListener {
-            ChuyenManHinh.MoFragment(
-                requireActivity(),
-                EditProfileFragment()
-            )
+            MoManHinhSuaThongTin()
         }
 
+        // Giữ logic của hiep2: Bấm vào "Đơn hàng" thì phải mở "Lịch sử đơn hàng"
         btnMyOrders.setOnClickListener {
             val intent = Intent(requireContext(), OrderHistoryActivity::class.java)
             startActivity(intent)
@@ -102,15 +99,28 @@ class ProfileFragment : Fragment() {
             )
         }
 
+        // Giữ logic của main: Mở màn hình Checkout Activity để tiến hành thanh toán
         btnPayment.setOnClickListener {
-            ChuyenManHinh.MoFragment(
-                requireActivity(),
-                PaymentFragment()
-            )
+            val intent = Intent(requireContext(), CheckoutActivity::class.java)
+            startActivity(intent)
         }
 
         btnLogout.setOnClickListener {
             QuanLyDangXuat.DangXuat(requireActivity())
+        }
+    }
+
+    private fun MoManHinhSuaThongTin() {
+        ChuyenManHinh.MoFragment(
+            requireActivity(),
+            EditProfileFragment()
+        )
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (::tvUserName.isInitialized) {
+            GanDuLieu()
         }
     }
 }
