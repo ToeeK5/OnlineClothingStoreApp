@@ -1,5 +1,6 @@
 package com.example.onlineclothingstoreapp.profile
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,9 +10,9 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.onlineclothingstoreapp.R
-import com.example.onlineclothingstoreapp.fragment.CartFragment
-import android.content.Intent
+import com.example.onlineclothingstoreapp.activities.OrderHistoryActivity
 import com.example.onlineclothingstoreapp.activities.CheckoutActivity
+
 class ProfileFragment : Fragment() {
 
     private lateinit var tvAvatar: TextView
@@ -31,7 +32,6 @@ class ProfileFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
 
         AnhXa(view)
@@ -56,6 +56,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun GanDuLieu() {
+        // Giữ cách gọi Callback bất đồng bộ của main để tránh lỗi hiển thị dữ liệu
         QuanLyThongTinNguoiDung.TaiThongTin(requireContext()) {
             tvUserName.text = QuanLyThongTinNguoiDung.tenHienThi
             tvUserEmail.text = QuanLyThongTinNguoiDung.email
@@ -78,11 +79,10 @@ class ProfileFragment : Fragment() {
             MoManHinhSuaThongTin()
         }
 
+        // Giữ logic của hiep2: Bấm vào "Đơn hàng" thì phải mở "Lịch sử đơn hàng"
         btnMyOrders.setOnClickListener {
-            ChuyenManHinh.MoFragment(
-                requireActivity(),
-                CartFragment()
-            )
+            val intent = Intent(requireContext(), OrderHistoryActivity::class.java)
+            startActivity(intent)
         }
 
         btnWishlist.setOnClickListener {
@@ -99,11 +99,9 @@ class ProfileFragment : Fragment() {
             )
         }
 
+        // Giữ logic của main: Mở màn hình Checkout Activity để tiến hành thanh toán
         btnPayment.setOnClickListener {
-
-            val intent =
-                Intent(requireContext(), CheckoutActivity::class.java)
-
+            val intent = Intent(requireContext(), CheckoutActivity::class.java)
             startActivity(intent)
         }
 

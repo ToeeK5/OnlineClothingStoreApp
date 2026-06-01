@@ -2,10 +2,13 @@ package com.example.onlineclothingstoreapp.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Paint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.onlineclothingstoreapp.adapters.CheckoutProductAdapter
 import com.example.onlineclothingstoreapp.databinding.ActivityCheckoutBinding
 import com.example.onlineclothingstoreapp.models.Address
 import com.example.onlineclothingstoreapp.models.CartItem
@@ -18,6 +21,7 @@ import java.util.Locale
 class CheckoutActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityCheckoutBinding
+    private lateinit var checkoutProductAdapter: CheckoutProductAdapter
 
     private val userId = "demo_user_01"
 
@@ -29,25 +33,40 @@ class CheckoutActivity : AppCompatActivity() {
     private var selectedAddress: Address? = null
 
     private var subtotal = 0.0
-    private var shippingFee = 0.0
-    private var tax = 0.0
-    private var total = 0.0
+    private var discount = 0.0
+    private var finalTotal = 0.0
     private var itemCount = 0
 
     private var paymentMethod = PAYMENT_COD
+
+    private val addressLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                loadAddressFromFirebase()
+            }
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCheckoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setupProductRecyclerView()
         setupEvents()
         loadCartFromFirebase()
+        loadAddressFromFirebase()
     }
 
     override fun onResume() {
         super.onResume()
         loadAddressFromFirebase()
+    }
+
+    private fun setupProductRecyclerView() {
+        checkoutProductAdapter = CheckoutProductAdapter(emptyList())
+
+        binding.recyclerCheckoutProducts.layoutManager = LinearLayoutManager(this)
+        binding.recyclerCheckoutProducts.adapter = checkoutProductAdapter
     }
 
     private fun setupEvents() {
@@ -80,11 +99,9 @@ class CheckoutActivity : AppCompatActivity() {
     private fun loadCartFromFirebase() {
         cartRepository.getCartItems(userId).observe(this) { items ->
             cartItems = items
+            checkoutProductAdapter.updateData(items)
 
             subtotal = cartItems.sumOf { it.price * it.quantity }
-            shippingFee = 0.0
-            tax = 0.0
-            total = subtotal + shippingFee + tax
             itemCount = cartItems.sumOf { it.quantity }
 
             updateOrderSummary()
@@ -114,15 +131,46 @@ class CheckoutActivity : AppCompatActivity() {
         binding.txtSelectedPayment.text = if (paymentMethod == PAYMENT_COD) {
             "Thanh toán khi nhận hàng"
         } else {
-            "Quét mã QR"
+            "Quét mã QR ngân hàng - giảm 10%"
         }
+
+        updateOrderSummary()
     }
 
     private fun updateOrderSummary() {
+        subtotal = cartItems.sumOf { it.price * it.quantity }
+        itemCount = cartItems.sumOf { it.quantity }
+
+        discount = if (paymentMethod == PAYMENT_QR) {
+            subtotal * 0.10
+        } else {
+            0.0
+        }
+
+        finalTotal = subtotal - discount
+
         binding.txtCheckoutItemCount.text = "$itemCount sản phẩm"
         binding.txtCheckoutSubtotal.text = formatMoney(subtotal)
-        binding.txtCheckoutShipping.text = if (shippingFee == 0.0) "Miễn phí" else formatMoney(shippingFee)
-        binding.txtCheckoutTotal.text = formatMoney(total)
+
+        if (paymentMethod == PAYMENT_QR) {
+            binding.layoutQrDiscount.visibility = android.view.View.VISIBLE
+            binding.txtCheckoutDiscount.text = "-${formatMoney(discount)}"
+
+            binding.txtCheckoutOriginalTotal.visibility = android.view.View.VISIBLE
+            binding.txtCheckoutOriginalTotal.text = formatMoney(subtotal)
+            binding.txtCheckoutOriginalTotal.paintFlags =
+                binding.txtCheckoutOriginalTotal.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+
+            binding.txtCheckoutTotal.text = formatMoney(finalTotal)
+        } else {
+            binding.layoutQrDiscount.visibility = android.view.View.GONE
+
+            binding.txtCheckoutOriginalTotal.visibility = android.view.View.GONE
+            binding.txtCheckoutOriginalTotal.paintFlags =
+                binding.txtCheckoutOriginalTotal.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+
+            binding.txtCheckoutTotal.text = formatMoney(finalTotal)
+        }
     }
 
     private fun placeOrder() {
@@ -138,21 +186,30 @@ class CheckoutActivity : AppCompatActivity() {
             return
         }
 
-        val payment = if (paymentMethod == PAYMENT_COD) {
-            "COD"
-        } else {
-            "QR"
+        // Nếu chọn QR: chưa tạo order ở Checkout.
+        // Chỉ chuyển dữ liệu sang màn hình QR.
+        // Khi bấm "Tôi đã thanh toán" bên QrPaymentActivity mới tạo order.
+        if (paymentMethod == PAYMENT_QR) {
+            val intent = Intent(this, QrPaymentActivity::class.java).apply {
+                putExtra("ORIGINAL_TOTAL", subtotal)
+                putExtra("DISCOUNT", discount)
+                putExtra("FINAL_TOTAL", finalTotal)
+            }
+
+            startActivity(intent)
+            return
         }
 
+        // Nếu chọn COD: tạo order ngay, xóa cart, sang OrderSuccessActivity.
         orderRepository.createOrder(
             userId = userId,
             address = address,
             cartItems = cartItems,
-            paymentMethod = payment,
+            paymentMethod = "COD",
             subtotal = subtotal,
-            shippingFee = shippingFee,
-            tax = tax,
-            total = total
+            shippingFee = 0.0,
+            tax = 0.0,
+            total = finalTotal
         ) { success, orderId ->
             if (success) {
                 Toast.makeText(this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show()
@@ -169,13 +226,6 @@ class CheckoutActivity : AppCompatActivity() {
         }
     }
 
-    //nhan kq tu address
-    private val addressLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                loadAddressFromFirebase()
-            }
-        }
     private fun formatMoney(amount: Double): String {
         val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
         return formatter.format(amount) + " đ"

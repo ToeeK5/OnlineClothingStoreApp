@@ -84,7 +84,7 @@
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:fontFamily="serif"
-                android:text="Bạn chưa có đơn hàng nào được chọn hãy thêm và thanh toán ngay nhé !"
+                android:text="@string/b_n_ch_a_c_n_h_ng_n_o_c_ch_n_h_y_th_m_v_thanh_to_n_ngay_nh"
                 android:textColor="@color/text_gray"
                 android:textSize="18sp"
                 android:lineSpacingMultiplier="1.2" />
@@ -149,31 +149,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/shippingRow"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/txtShippingLabel"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/shipping_fee"
-                    android:textColor="@color/text_gray"
-                    android:textSize="17sp" />
-
-                <TextView
-                    android:id="@+id/txtShippingValue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/free_shipping"
-                    android:textColor="@color/text_dark"
-                    android:textSize="17sp" />
-
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/taxRow"
