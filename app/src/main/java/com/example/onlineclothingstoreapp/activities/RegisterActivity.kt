@@ -102,10 +102,10 @@ class RegisterActivity : AppCompatActivity() {
                             // Lưu dữ liệu vào Firestore
                             val userId = user.uid
                             val userModel = User(
-                                id = userId,
-                                username = username,
-                                email = email
-                            )
+    id = userId,
+    username = username,
+    email = email
+)
 
                             firebaseService.db.collection("pending_users").document(userId)
                                 .set(userModel)
