@@ -7,9 +7,12 @@ import com.bumptech.glide.Glide
 import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.databinding.ItemCheckoutProductBinding
 import com.example.onlineclothingstoreapp.models.CartItem
+import java.text.NumberFormat
+import java.util.Locale
 
 class CheckoutProductAdapter(
-    private var items: List<CartItem>
+    private var items: List<CartItem>,
+    private val onItemClick: (CartItem) -> Unit
 ) : RecyclerView.Adapter<CheckoutProductAdapter.CheckoutProductViewHolder>() {
 
     inner class CheckoutProductViewHolder(
@@ -42,6 +45,10 @@ class CheckoutProductAdapter(
             .placeholder(R.drawable.ic_placeholder)
             .error(R.drawable.ic_placeholder)
             .into(holder.binding.imgCheckoutProduct)
+
+        holder.itemView.setOnClickListener {
+            onItemClick(item)
+        }
     }
 
     override fun getItemCount(): Int = items.size
@@ -49,5 +56,10 @@ class CheckoutProductAdapter(
     fun updateData(newItems: List<CartItem>) {
         items = newItems
         notifyDataSetChanged()
+    }
+
+    private fun formatMoney(amount: Double): String {
+        val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
+        return formatter.format(amount) + " đ"
     }
 }

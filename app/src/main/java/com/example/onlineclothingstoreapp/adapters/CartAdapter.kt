@@ -14,29 +14,54 @@ class CartAdapter(
     private var items: List<CartItem>,
     private val onIncrease: (CartItem) -> Unit,
     private val onDecrease: (CartItem) -> Unit,
+    private val onItemClick: (CartItem) -> Unit
 ) : RecyclerView.Adapter<CartAdapter.CartViewHolder>() {
 
-    inner class CartViewHolder(val binding: ItemCartBinding) : RecyclerView.ViewHolder(binding.root)
+    inner class CartViewHolder(
+        val binding: ItemCartBinding
+    ) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartViewHolder {
-        val binding = ItemCartBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = ItemCartBinding.inflate(
+            LayoutInflater.from(parent.context),
+            parent,
+            false
+        )
         return CartViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: CartViewHolder, position: Int) {
         val item = items[position]
+
         holder.binding.tvProductName.text = item.productName
-        holder.binding.tvVariant.text = "Color: ${item.selectedColor} / Size: ${item.selectedSize}"
+        holder.binding.tvVariant.text =
+            "Color: ${item.selectedColor} / Size: ${item.selectedSize}"
         holder.binding.tvPrice.text = formatMoney(item.price)
         holder.binding.tvQuantity.text = item.quantity.toString()
 
         Glide.with(holder.itemView.context)
-            .load(if (item.productImageUrl.isNotBlank()) item.productImageUrl else R.drawable.ic_placeholder)
+            .load(
+                if (item.productImageUrl.isNotBlank()) {
+                    item.productImageUrl
+                } else {
+                    R.drawable.ic_placeholder
+                }
+            )
             .placeholder(R.drawable.ic_placeholder)
+            .error(R.drawable.ic_placeholder)
             .into(holder.binding.ivProductImage)
 
-        holder.binding.btnIncrease.setOnClickListener { onIncrease(item) }
-        holder.binding.btnDecrease.setOnClickListener { onDecrease(item) }
+        holder.binding.btnIncrease.setOnClickListener {
+            onIncrease(item)
+        }
+
+        holder.binding.btnDecrease.setOnClickListener {
+            onDecrease(item)
+        }
+
+        holder.itemView.setOnClickListener {
+            onItemClick(item)
+        }
     }
 
     override fun getItemCount(): Int = items.size
@@ -45,9 +70,11 @@ class CartAdapter(
         items = newItems
         notifyDataSetChanged()
     }
+
     fun getItem(position: Int): CartItem {
         return items[position]
     }
+
     private fun formatMoney(amount: Double): String {
         val formatter = NumberFormat.getNumberInstance(Locale("vi", "VN"))
         return formatter.format(amount) + " đ"

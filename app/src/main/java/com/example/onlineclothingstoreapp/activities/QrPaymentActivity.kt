@@ -11,6 +11,7 @@ import com.example.onlineclothingstoreapp.models.CartItem
 import com.example.onlineclothingstoreapp.repository.AddressRepository
 import com.example.onlineclothingstoreapp.repository.CartRepository
 import com.example.onlineclothingstoreapp.repository.OrderRepository
+import com.google.firebase.auth.FirebaseAuth
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -18,11 +19,13 @@ class QrPaymentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityQrPaymentBinding
 
-    private val userId = "demo_user_01"
+    private val auth = FirebaseAuth.getInstance()
 
     private val cartRepository = CartRepository()
     private val addressRepository = AddressRepository()
     private val orderRepository = OrderRepository()
+
+    private var userId: String = ""
 
     private var cartItems: List<CartItem> = emptyList()
     private var selectedAddress: Address? = null
@@ -37,6 +40,15 @@ class QrPaymentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityQrPaymentBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để thanh toán", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        userId = currentUser.uid
 
         getIntentData()
         setupData()
@@ -112,7 +124,7 @@ class QrPaymentActivity : AppCompatActivity() {
             binding.btnConfirmPayment.isEnabled = true
             binding.btnConfirmPayment.text = "Tôi đã thanh toán"
 
-            if (success) {
+            if (success && orderId != null) {
                 Toast.makeText(this, "Thanh toán thành công", Toast.LENGTH_SHORT).show()
 
                 val intent = Intent(this, OrderSuccessActivity::class.java).apply {

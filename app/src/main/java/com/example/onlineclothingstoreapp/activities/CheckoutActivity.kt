@@ -15,6 +15,7 @@ import com.example.onlineclothingstoreapp.models.CartItem
 import com.example.onlineclothingstoreapp.repository.AddressRepository
 import com.example.onlineclothingstoreapp.repository.CartRepository
 import com.example.onlineclothingstoreapp.repository.OrderRepository
+import com.google.firebase.auth.FirebaseAuth
 import java.text.NumberFormat
 import java.util.Locale
 
@@ -23,11 +24,13 @@ class CheckoutActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCheckoutBinding
     private lateinit var checkoutProductAdapter: CheckoutProductAdapter
 
-    private val userId = "demo_user_01"
+    private val auth = FirebaseAuth.getInstance()
 
     private val cartRepository = CartRepository()
     private val addressRepository = AddressRepository()
     private val orderRepository = OrderRepository()
+
+    private var userId: String = ""
 
     private var cartItems: List<CartItem> = emptyList()
     private var selectedAddress: Address? = null
@@ -51,6 +54,15 @@ class CheckoutActivity : AppCompatActivity() {
         binding = ActivityCheckoutBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để thanh toán", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        userId = currentUser.uid
+
         setupProductRecyclerView()
         setupEvents()
         loadCartFromFirebase()
@@ -59,11 +71,27 @@ class CheckoutActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadAddressFromFirebase()
+
+        if (userId.isNotBlank()) {
+            loadAddressFromFirebase()
+        }
     }
 
     private fun setupProductRecyclerView() {
-        checkoutProductAdapter = CheckoutProductAdapter(emptyList())
+        checkoutProductAdapter = CheckoutProductAdapter(
+            items = emptyList(),
+            onItemClick = { item ->
+                if (item.productId.isNotBlank()) {
+                    val intent = Intent(this, ProductDetailActivity::class.java).apply {
+                        putExtra("PRODUCT_ID", item.productId)
+                    }
+
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this, "Không tìm thấy mã sản phẩm", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
 
         binding.recyclerCheckoutProducts.layoutManager = LinearLayoutManager(this)
         binding.recyclerCheckoutProducts.adapter = checkoutProductAdapter
@@ -100,10 +128,6 @@ class CheckoutActivity : AppCompatActivity() {
         cartRepository.getCartItems(userId).observe(this) { items ->
             cartItems = items
             checkoutProductAdapter.updateData(items)
-
-            subtotal = cartItems.sumOf { it.price * it.quantity }
-            itemCount = cartItems.sumOf { it.quantity }
-
             updateOrderSummary()
         }
     }
@@ -186,9 +210,6 @@ class CheckoutActivity : AppCompatActivity() {
             return
         }
 
-        // Nếu chọn QR: chưa tạo order ở Checkout.
-        // Chỉ chuyển dữ liệu sang màn hình QR.
-        // Khi bấm "Tôi đã thanh toán" bên QrPaymentActivity mới tạo order.
         if (paymentMethod == PAYMENT_QR) {
             val intent = Intent(this, QrPaymentActivity::class.java).apply {
                 putExtra("ORIGINAL_TOTAL", subtotal)
@@ -200,7 +221,6 @@ class CheckoutActivity : AppCompatActivity() {
             return
         }
 
-        // Nếu chọn COD: tạo order ngay, xóa cart, sang OrderSuccessActivity.
         orderRepository.createOrder(
             userId = userId,
             address = address,
@@ -211,7 +231,7 @@ class CheckoutActivity : AppCompatActivity() {
             tax = 0.0,
             total = finalTotal
         ) { success, orderId ->
-            if (success) {
+            if (success && orderId != null) {
                 Toast.makeText(this, "Đặt hàng thành công", Toast.LENGTH_SHORT).show()
 
                 val intent = Intent(this, OrderSuccessActivity::class.java).apply {
