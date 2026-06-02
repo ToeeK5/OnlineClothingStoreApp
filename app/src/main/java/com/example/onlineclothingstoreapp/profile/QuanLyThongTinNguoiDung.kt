@@ -12,6 +12,7 @@ object QuanLyThongTinNguoiDung {
     var ngaySinh = ""
     var diaChi = ""
     var email = ""
+    var avatar = "avatar_1"
 
     private fun LayUid(): String? {
         return FirebaseService().auth.currentUser?.uid
@@ -42,7 +43,8 @@ object QuanLyThongTinNguoiDung {
             "gioiTinh" to gioiTinh,
             "soDienThoai" to soDienThoai,
             "ngaySinh" to ngaySinh,
-            "diaChi" to diaChi
+            "diaChi" to diaChi,
+            "avatar" to avatar
         )
 
         firebaseService.db.collection("users")
@@ -50,12 +52,29 @@ object QuanLyThongTinNguoiDung {
             .update(duLieuCapNhat)
     }
 
+    fun LuuAvatar(avatarMoi: String) {
+        val uid = LayUid() ?: return
+        val firebaseService = FirebaseService()
+
+        avatar = avatarMoi
+
+        firebaseService.db.collection("users")
+            .document(uid)
+            .update("avatar", avatarMoi)
+    }
+
     fun TaiThongTin(context: Context, hoanTat: () -> Unit) {
         val uid = LayUid()
 
         if (uid == null) {
             tenHienThi = "Người dùng"
+            tuoi = ""
+            gioiTinh = ""
+            soDienThoai = ""
+            ngaySinh = ""
+            diaChi = ""
             email = ""
+            avatar = "avatar_1"
             hoanTat()
             return
         }
@@ -72,33 +91,14 @@ object QuanLyThongTinNguoiDung {
 
                 val username = document.getString("username") ?: "Người dùng"
 
-                tenHienThi =
-                    document.getString("tenHienThi")
-                        ?: username
-
-                tuoi =
-                    document.getString("tuoi")
-                        ?: ""
-
-                gioiTinh =
-                    document.getString("gioiTinh")
-                        ?: ""
-
-                soDienThoai =
-                    document.getString("soDienThoai")
-                        ?: ""
-
-                ngaySinh =
-                    document.getString("ngaySinh")
-                        ?: ""
-
-                diaChi =
-                    document.getString("diaChi")
-                        ?: ""
-
-                email =
-                    document.getString("email")
-                        ?: email
+                tenHienThi = document.getString("tenHienThi") ?: username
+                tuoi = document.getString("tuoi") ?: ""
+                gioiTinh = document.getString("gioiTinh") ?: ""
+                soDienThoai = document.getString("soDienThoai") ?: ""
+                ngaySinh = document.getString("ngaySinh") ?: ""
+                diaChi = document.getString("diaChi") ?: ""
+                email = document.getString("email") ?: email
+                avatar = document.getString("avatar") ?: "avatar_1"
 
                 hoanTat()
             }
@@ -109,6 +109,8 @@ object QuanLyThongTinNguoiDung {
                 soDienThoai = ""
                 ngaySinh = ""
                 diaChi = ""
+                avatar = "avatar_1"
+
                 hoanTat()
             }
     }

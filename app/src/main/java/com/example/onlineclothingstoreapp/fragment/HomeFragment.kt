@@ -19,12 +19,11 @@ import com.example.onlineclothingstoreapp.adapters.home.ProductAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentHomeBinding
 import com.example.onlineclothingstoreapp.repository.cart.CartRepository
 import com.example.onlineclothingstoreapp.viewmodels.ProductViewmodel
-import com.example.onlineclothingstoreapp.profile.QuanLyYeuThich
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
 import com.google.android.material.badge.ExperimentalBadgeUtils
 import com.google.firebase.auth.FirebaseAuth
-
+import com.example.onlineclothingstoreapp.profile.QuanLyYeuThich
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
