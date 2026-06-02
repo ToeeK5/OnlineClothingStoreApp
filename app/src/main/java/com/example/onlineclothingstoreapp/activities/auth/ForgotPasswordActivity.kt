@@ -1,5 +1,6 @@
 package com.example.onlineclothingstoreapp.activities.auth
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Patterns
@@ -27,8 +28,8 @@ class ForgotPasswordActivity : AppCompatActivity() {
             resetPassword()
         }
 
-        binding.tvBackToLogin.setOnClickListener {
-            finish()
+        binding.btnBack.setOnClickListener {
+            startActivity(Intent(this, LoginActivity::class.java))
         }
     }
 
