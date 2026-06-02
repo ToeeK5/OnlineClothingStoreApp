@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -14,12 +15,13 @@ import com.example.onlineclothingstoreapp.activities.EditProfileActivity
 import com.example.onlineclothingstoreapp.activities.PaymentActivity
 import com.example.onlineclothingstoreapp.activities.SettingsActivity
 import com.example.onlineclothingstoreapp.activities.WishlistActivity
+import com.example.onlineclothingstoreapp.profile.QuanLyAvatar
 import com.example.onlineclothingstoreapp.profile.QuanLyDangXuat
 import com.example.onlineclothingstoreapp.profile.QuanLyThongTinNguoiDung
 
 class ProfileFragment : Fragment() {
 
-    private lateinit var tvAvatar: TextView
+    private lateinit var imgAvatar: ImageView
     private lateinit var tvUserName: TextView
     private lateinit var tvUserEmail: TextView
 
@@ -46,7 +48,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun AnhXa(view: View) {
-        tvAvatar = view.findViewById(R.id.tvAvatar)
+        imgAvatar = view.findViewById(R.id.imgAvatar)
         tvUserName = view.findViewById(R.id.tvUserName)
         tvUserEmail = view.findViewById(R.id.tvUserEmail)
 
@@ -62,23 +64,25 @@ class ProfileFragment : Fragment() {
     private fun GanDuLieu() {
         tvUserName.text = "Đang tải..."
         tvUserEmail.text = ""
-        tvAvatar.text = "U"
+
+        imgAvatar.setImageResource(
+            QuanLyAvatar.LayHinhAvatar("avatar_1")
+        )
 
         QuanLyThongTinNguoiDung.TaiThongTin(requireContext()) {
             tvUserName.text = QuanLyThongTinNguoiDung.tenHienThi
             tvUserEmail.text = QuanLyThongTinNguoiDung.email
 
-            tvAvatar.text =
-                QuanLyThongTinNguoiDung.tenHienThi
-                    .ifEmpty { "U" }
-                    .first()
-                    .toString()
-                    .uppercase()
+            imgAvatar.setImageResource(
+                QuanLyAvatar.LayHinhAvatar(
+                    QuanLyThongTinNguoiDung.avatar
+                )
+            )
         }
     }
 
     private fun SuKien() {
-        tvAvatar.setOnClickListener {
+        imgAvatar.setOnClickListener {
             MoSuaThongTin()
         }
 

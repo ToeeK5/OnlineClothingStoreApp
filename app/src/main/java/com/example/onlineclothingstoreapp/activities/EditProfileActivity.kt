@@ -1,18 +1,21 @@
 ﻿package com.example.onlineclothingstoreapp.activities
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.onlineclothingstoreapp.R
-import com.example.onlineclothingstoreapp.profile.*
+import com.example.onlineclothingstoreapp.profile.QuanLyAvatar
+import com.example.onlineclothingstoreapp.profile.QuanLyThongTinNguoiDung
 
 class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var btnBack: TextView
-    private lateinit var imgAvatar: TextView
+    private lateinit var imgAvatar: ImageView
 
     private lateinit var edtDisplayName: EditText
     private lateinit var edtAge: EditText
@@ -25,6 +28,8 @@ class EditProfileActivity : AppCompatActivity() {
     private lateinit var btnSave: Button
     private lateinit var btnCancel: Button
     private lateinit var btnChangeAvatar: Button
+
+    private var avatarDangChon = "avatar_1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,12 +67,11 @@ class EditProfileActivity : AppCompatActivity() {
             edtBirthday.setText(QuanLyThongTinNguoiDung.ngaySinh)
             edtAddress.setText(QuanLyThongTinNguoiDung.diaChi)
 
-            imgAvatar.text =
-                QuanLyThongTinNguoiDung.tenHienThi
-                    .ifEmpty { "U" }
-                    .first()
-                    .toString()
-                    .uppercase()
+            avatarDangChon = QuanLyThongTinNguoiDung.avatar
+
+            imgAvatar.setImageResource(
+                QuanLyAvatar.LayHinhAvatar(avatarDangChon)
+            )
         }
     }
 
@@ -89,12 +93,51 @@ class EditProfileActivity : AppCompatActivity() {
         }
 
         btnChangeAvatar.setOnClickListener {
-            Toast.makeText(
-                this,
-                "Chức năng đổi avatar đang phát triển",
-                Toast.LENGTH_SHORT
-            ).show()
+            ChonAvatar()
         }
+
+        imgAvatar.setOnClickListener {
+            ChonAvatar()
+        }
+    }
+
+    private fun ChonAvatar() {
+        val dsAvatar = arrayOf(
+            "avatar_1",
+            "avatar_2",
+            "avatar_3",
+            "avatar_4",
+            "avatar_5",
+            "avatar_6"
+        )
+
+        val tenHienThi = arrayOf(
+            "Avatar 1",
+            "Avatar 2",
+            "Avatar 3",
+            "Avatar 4",
+            "Avatar 5",
+            "Avatar 6"
+        )
+
+        AlertDialog.Builder(this)
+            .setTitle("Chọn avatar")
+            .setItems(tenHienThi) { _, viTri ->
+                avatarDangChon = dsAvatar[viTri]
+
+                imgAvatar.setImageResource(
+                    QuanLyAvatar.LayHinhAvatar(avatarDangChon)
+                )
+
+                QuanLyThongTinNguoiDung.LuuAvatar(avatarDangChon)
+
+                Toast.makeText(
+                    this,
+                    "Đã đổi avatar",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            .show()
     }
 
     private fun BatCheDoChinhSua() {
@@ -118,6 +161,8 @@ class EditProfileActivity : AppCompatActivity() {
     }
 
     private fun LuuThongTin() {
+        QuanLyThongTinNguoiDung.avatar = avatarDangChon
+
         QuanLyThongTinNguoiDung.LuuThongTin(
             this,
             edtDisplayName.text.toString(),
@@ -133,7 +178,7 @@ class EditProfileActivity : AppCompatActivity() {
             "Đã lưu thông tin",
             Toast.LENGTH_SHORT
         ).show()
+
         finish()
     }
 }
-
