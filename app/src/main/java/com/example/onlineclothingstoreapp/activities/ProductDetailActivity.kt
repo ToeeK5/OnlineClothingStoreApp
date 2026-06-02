@@ -2,8 +2,8 @@ package com.example.onlineclothingstoreapp.activities
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -44,12 +44,61 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        binding.btnBack.setOnClickListener { onBackPressed() }
+        binding.btnBack.setOnClickListener { finish() }
     }
 
     private fun loadProductDetails(productId: String) {
         repository.getProductById(productId).observe(this) { product ->
             product?.let { setupUI(it) }
+        }
+    }
+
+    private fun getColorFromName(colorName: String): Int {
+        val color = colorName.lowercase(Locale.ROOT)
+
+        return when {
+            color.contains("nâu") || color.contains("brown") ->
+                Color.parseColor("#705B5A")
+
+            color.contains("đỏ") || color.contains("red") ->
+                Color.parseColor("#B01A1A")
+
+            color.contains("hồng") || color.contains("pink") ->
+                Color.parseColor("#E8A7A1")
+
+            color.contains("vàng") || color.contains("yellow") ->
+                Color.parseColor("#E6C229")
+
+            color.contains("cam") || color.contains("orange") ->
+                Color.parseColor("#E17F24")
+
+            color.contains("xám") || color.contains("xám đen") || color.contains("grey") || color.contains("gray") ->
+                Color.parseColor("#9E9E9E")
+
+            color.contains("kem") || color.contains("cream") || color.contains("beige") ->
+                Color.parseColor("#EBE6E1")
+
+            color.contains("tím") || color.contains("purple") ->
+                Color.parseColor("#8E24AA")
+
+            color.contains("xanh rêu") ->
+                Color.parseColor("#556B2F")
+
+            color.contains("xanh lá") || color.contains("xanh dạ quang") || color.contains("green") ->
+                Color.parseColor("#7A9A7C")
+
+            color.contains("xanh dương")
+                    || color.contains("xanh biển") || color.contains("xanh")
+                    || color.contains("blue") ->
+                Color.parseColor("#2B547E")
+
+            color.contains("đen") || color.contains("black") ->
+                Color.parseColor("#121212")
+
+            color.contains("trắng") || color.contains("white")->
+                Color.parseColor("#FFFFFF")
+
+            else -> Color.parseColor("#757575")
         }
     }
 
@@ -61,24 +110,56 @@ class ProductDetailActivity : AppCompatActivity() {
 
         // Setup Colors
         binding.colorContainer.removeAllViews()
-        product.colorImages.keys.forEach { colorName ->
+        val colorKeys = product.colorImages.keys.toList()
+        
+        colorKeys.forEachIndexed { index, colorName ->
             val colorView = LayoutInflater.from(this).inflate(R.layout.item_color_circle, binding.colorContainer, false) as MaterialCardView
+
+            // Fix: Áp dụng màu trực tiếp cho MaterialCardView, không dùng View con
+            val hexColor = getColorFromName(colorName)
+            colorView.setCardBackgroundColor(hexColor)
+            
             colorView.setOnClickListener {
                 selectedColor = colorName
+                binding.txtColorTitle.text = "MÀU — ${colorName.uppercase(Locale.ROOT)}"
                 updateImage(product.colorImages[colorName])
                 
                 for (i in 0 until binding.colorContainer.childCount) {
-                    (binding.colorContainer.getChildAt(i) as MaterialCardView).strokeColor = Color.parseColor("#E0E0E0")
+                    val child = binding.colorContainer.getChildAt(i) as MaterialCardView
+                    child.strokeColor = Color.parseColor("#E0E0E0")
+                    child.strokeWidth = 2
                 }
                 colorView.strokeColor = Color.BLACK
+                colorView.strokeWidth = 4
             }
+            
             binding.colorContainer.addView(colorView)
+            
+            if (index == 0) {
+                selectedColor = colorName
+                binding.txtColorTitle.text = "MÀU — ${colorName.uppercase(Locale.ROOT)}"
+                colorView.strokeColor = Color.BLACK
+                colorView.strokeWidth = 4
+                updateImage(product.colorImages[colorName])
+            }
         }
         
         // Setup Sizes
         binding.sizeContainer.removeAllViews()
         product.sizes.forEach { size ->
+            val isFreeSize = size.trim().lowercase(Locale.ROOT) == "freesize" || size.trim().lowercase(Locale.ROOT) == "free size"
             val sizeView = LayoutInflater.from(this).inflate(R.layout.item_size_button, binding.sizeContainer, false) as MaterialCardView
+            
+            if (isFreeSize) {
+                sizeView.radius = 0f
+                val params = sizeView.layoutParams
+                params.width = ViewGroup.LayoutParams.WRAP_CONTENT
+                sizeView.layoutParams = params
+                sizeView.setContentPadding(24, 0, 24, 0)
+            } else {
+                sizeView.radius = 22f 
+            }
+
             sizeView.findViewById<TextView>(R.id.tvSize).text = size
             sizeView.setOnClickListener {
                 selectedSize = size
@@ -92,8 +173,6 @@ class ProductDetailActivity : AppCompatActivity() {
             }
             binding.sizeContainer.addView(sizeView)
         }
-
-        updateImage(product.colorImages.values.firstOrNull())
 
         binding.btnAddToCart.setOnClickListener {
             if (selectedSize == null) {
@@ -121,16 +200,11 @@ class ProductDetailActivity : AppCompatActivity() {
     }
 
     private fun showSnackbar(message: String, isSuccess: Boolean = false) {
-        //Log.d("ProductDetail", "Showing snackbar: $message")
-
         val snackbar = Snackbar.make(binding.btnAddToCart, message, Snackbar.LENGTH_LONG)
-
         val color = if (isSuccess) Color.parseColor("#4CAF50") else Color.parseColor("#F44336")
         snackbar.setBackgroundTint(color)
         snackbar.setTextColor(Color.WHITE)
-
         snackbar.anchorView = binding.btnAddToCart
-
         snackbar.show()
     }
 }

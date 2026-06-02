@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.databinding.ActivityLoginBinding
 import com.example.onlineclothingstoreapp.firebase.FirebaseService
+import com.example.onlineclothingstoreapp.models.User
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -51,8 +52,13 @@ class LoginActivity : AppCompatActivity() {
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Nhận email từ RegisterActivity nếu có
+        val prefilledEmail = intent.getStringExtra("PREFILLED_EMAIL")
+        if (!prefilledEmail.isNullOrEmpty()) {
+            binding.edtLoginUsername.setText(prefilledEmail)
+        }
+
         // Khởi tạo cấu hình Google Sign-In
-        // Sử dụng default_web_client_id tự sinh từ file google-services.json
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -81,7 +87,12 @@ class LoginActivity : AppCompatActivity() {
 
         // Quên mật khẩu
         binding.tvForgotPassword?.setOnClickListener {
-            showSnackbar("Chức năng đang được phát triển")
+            val email = binding.edtLoginUsername.text.toString().trim()
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            if (email.isNotEmpty()) {
+                intent.putExtra("PREFILLED_EMAIL", email)
+            }
+            startActivity(intent)
         }
     }
 
@@ -112,14 +123,47 @@ class LoginActivity : AppCompatActivity() {
         firebaseService.auth
             .signInWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
-                setLoading(false)
                 if (task.isSuccessful) {
-                    showSnackbar("Đăng nhập thành công!", isSuccess = true)
-                    binding.root.postDelayed({
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
-                    }, 800)
+                    val user = firebaseService.auth.currentUser
+
+                    if (user != null) {
+                        if (user.isEmailVerified) {
+                            val userId = user.uid
+
+                            // 1. Lấy dữ liệu từ vùng tạm "pending_users"
+                            firebaseService.db.collection("pending_users").document(userId).get()
+                                .addOnSuccessListener { document ->
+                                    if (document.exists()) {
+                                        val userModel = document.toObject(User::class.java)
+
+                                        if (userModel != null) {
+                                            // 2. Chuyển sang danh sách user chính thức "users"
+                                            firebaseService.db.collection("users").document(userId).set(userModel)
+                                                .addOnSuccessListener {
+                                                    // 3. Xóa dữ liệu ở vùng tạm đi cho sạch database
+                                                    firebaseService.db.collection("pending_users").document(userId).delete()
+
+                                                    // 4. Vào màn hình chính mua sắm đồ LUMIÈRE
+                                                    showSnackbar("Chào mừng bạn đến với LUMIÈRE!", true)
+                                                    startActivity(Intent(this, MainActivity::class.java))
+                                                    finish()
+                                                }
+                                        }
+                                    } else {
+                                        // Nếu tài khoản này đã kích hoạt từ trước rồi thì vào thẳng app luôn
+                                        startActivity(Intent(this, MainActivity::class.java))
+                                        finish()
+                                    }
+                                }
+                        } else {
+                            setLoading(false)
+                            // Nếu dùng email bịa, họ sẽ bị kẹt ở đây mãi mãi và danh sách "users" của bạn luôn sạch rác!
+                            showSnackbar("Tài khoản chưa xác thực. Vui lòng kiểm tra email.")
+                            firebaseService.auth.signOut()
+                        }
+                    }
                 } else {
+                    setLoading(false)
                     val exception = task.exception
 
                     val errorMessage = when (exception) {
@@ -206,7 +250,6 @@ class LoginActivity : AppCompatActivity() {
         
         provider.scopes = listOf("email", "name")
 
-        // Firebase Auth hỗ trợ cơ chế đăng nhập Apple Web OAuth tự động và mượt mà trên Android
         firebaseService.auth.startActivityForSignInWithProvider(this, provider.build())
             .addOnSuccessListener { authResult ->
                 setLoading(false)

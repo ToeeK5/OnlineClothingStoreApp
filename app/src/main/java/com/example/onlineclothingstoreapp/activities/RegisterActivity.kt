@@ -28,7 +28,12 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         binding.tvLogin.setOnClickListener {
-            startActivity(Intent(this, LoginActivity::class.java))
+            val email = binding.edtEmail.text.toString().trim()
+            val intent = Intent(this, LoginActivity::class.java)
+            if (email.isNotEmpty()) {
+                intent.putExtra("PREFILLED_EMAIL", email)
+            }
+            startActivity(intent)
             finish()
         }
 
@@ -89,30 +94,41 @@ class RegisterActivity : AppCompatActivity() {
             .createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val userId = firebaseService.auth.currentUser?.uid
+                    val user = firebaseService.auth.currentUser
+                    
+                    // Gửi email xác thực
+                    user?.sendEmailVerification()?.addOnCompleteListener { emailTask ->
+                        if (emailTask.isSuccessful) {
+                            // Lưu dữ liệu vào Firestore
+                            val userId = user.uid
+                            val userModel = User(
+                                id = userId,
+                                username = username,
+                                email = email
+                            )
 
-                    val user = User(
-                        id = userId ?: "",
-                        username = username,
-                        email = email
-                    )
+                            firebaseService.db.collection("pending_users").document(userId)
+                                .set(userModel)
+                                .addOnSuccessListener {
+                                    setLoading(false)
+                                    showSnackbar("Đăng ký thành công! Vui lòng kích hoạt email.", true)
 
-                    userId?.let { uid ->
-                        firebaseService.db.collection("users").document(uid)
-                            .set(user)
-                            .addOnSuccessListener {
-                                setLoading(false)
-                                showSnackbar("Đăng ký thành công!", true)
-                                // Chuyển màn hình sau khi hiện thông báo thành công
-                                binding.root.postDelayed({
-                                    startActivity(Intent(this, LoginActivity::class.java))
-                                    finish()
-                                }, 1500)
-                            }
-                            .addOnFailureListener {
-                                setLoading(false)
-                                showSnackbar("Lỗi lưu dữ liệu: ${it.message}")
-                            }
+                                    binding.root.postDelayed({
+                                        firebaseService.auth.signOut()
+                                        val intent = Intent(this, LoginActivity::class.java)
+                                        intent.putExtra("PREFILLED_EMAIL", email)
+                                        startActivity(intent)
+                                        finish()
+                                    }, 2000)
+                                }
+                                .addOnFailureListener {
+                                    setLoading(false)
+                                    showSnackbar("Lỗi lưu dữ liệu: ${it.message}")
+                                }
+                        } else {
+                            setLoading(false)
+                            showSnackbar("Đăng ký thành công, nhưng không thể gửi email xác thực.")
+                        }
                     }
                 } else {
                     setLoading(false)
