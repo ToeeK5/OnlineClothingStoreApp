@@ -1,4 +1,4 @@
-package com.example.onlineclothingstoreapp.activities
+package com.example.onlineclothingstoreapp.activities.cart
 
 import android.app.Activity
 import android.content.Intent

@@ -1,4 +1,4 @@
-package com.example.onlineclothingstoreapp.activities
+package com.example.onlineclothingstoreapp.activities.cart
 
 import android.os.Bundle
 import android.widget.Toast
