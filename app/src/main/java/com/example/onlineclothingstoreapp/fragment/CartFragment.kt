@@ -8,11 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.onlineclothingstoreapp.activities.CheckoutActivity
-import com.example.onlineclothingstoreapp.adapters.CartAdapter
+import com.example.onlineclothingstoreapp.activities.cart.CheckoutActivity
+import com.example.onlineclothingstoreapp.adapters.cart.CartAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentCartBinding
-import com.example.onlineclothingstoreapp.models.CartItem
-import com.example.onlineclothingstoreapp.repository.CartRepository
+import com.example.onlineclothingstoreapp.models.cart.CartItem
+import com.example.onlineclothingstoreapp.repository.cart.CartRepository
 import java.text.NumberFormat
 import java.util.Locale
 import android.graphics.Canvas

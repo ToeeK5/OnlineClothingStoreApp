@@ -2,7 +2,7 @@ package com.example.onlineclothingstoreapp.profile
 
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
-import com.example.onlineclothingstoreapp.activities.LoginActivity
+import com.example.onlineclothingstoreapp.activities.auth.LoginActivity
 
 object QuanLyDangXuat {
 

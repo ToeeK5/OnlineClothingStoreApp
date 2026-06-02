@@ -19,32 +19,32 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineClothingStoreApp">
         <activity
-            android:name=".activities.QrPaymentActivity"
+            android:name=".activities.cart.QrPaymentActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.AddAddressActivity"
+            android:name=".activities.cart.AddAddressActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.OrderSuccessActivity"
+            android:name=".activities.cart.OrderSuccessActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name=".activities.AddressActivity"
+            android:name=".activities.cart.AddressActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.ProductDetailActivity"
+            android:name=".activities.home.ProductDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.OrderHistoryActivity"
+            android:name=".activities.cart.OrderHistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.OrderDetailActivity"
+            android:name=".activities.cart.OrderDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.CheckoutActivity"
+            android:name=".activities.cart.CheckoutActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.LoginActivity"
+            android:name=".activities.auth.LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar" >
             <intent-filter>
@@ -54,15 +54,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.RegisterActivity"
+            android:name=".activities.auth.RegisterActivity"
             android:exported="true"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
         <activity
-            android:name=".activities.ForgotPasswordActivity"
+            android:name=".activities.auth.ForgotPasswordActivity"
             android:exported="false"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activities.home.SustainabilityPolicyActivity"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+        <activity
+            android:name=".activities.home.CollectionOrOfferActivity"
+            android:exported="false" />
         <activity
             android:name=".activities.MainActivity"
             android:exported="true"

@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onlineclothingstoreapp.R
-import com.example.onlineclothingstoreapp.activities.ProductDetailActivity
-import com.example.onlineclothingstoreapp.adapters.ProductAdapter
+import com.example.onlineclothingstoreapp.activities.home.ProductDetailActivity
+import com.example.onlineclothingstoreapp.adapters.home.ProductAdapter
 
 class WishlistFragment : Fragment() {
 

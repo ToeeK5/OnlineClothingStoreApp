@@ -12,12 +12,12 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.onlineclothingstoreapp.R
-import com.example.onlineclothingstoreapp.activities.ProductDetailActivity
-import com.example.onlineclothingstoreapp.adapters.BannerAdapter
-import com.example.onlineclothingstoreapp.adapters.CategoryAdapter
-import com.example.onlineclothingstoreapp.adapters.ProductAdapter
+import com.example.onlineclothingstoreapp.activities.home.ProductDetailActivity
+import com.example.onlineclothingstoreapp.adapters.home.BannerAdapter
+import com.example.onlineclothingstoreapp.adapters.home.CategoryAdapter
+import com.example.onlineclothingstoreapp.adapters.home.ProductAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentHomeBinding
-import com.example.onlineclothingstoreapp.repository.CartRepository
+import com.example.onlineclothingstoreapp.repository.cart.CartRepository
 import com.example.onlineclothingstoreapp.viewmodels.ProductViewmodel
 import com.example.onlineclothingstoreapp.profile.QuanLyYeuThich
 import com.google.android.material.badge.BadgeDrawable
@@ -51,6 +51,10 @@ class HomeFragment : Fragment() {
         setupProducts()
         observeViewModel()
         setupCartBadge()
+
+        binding.txtAll.setOnClickListener {
+            productViewModel.filterProductsByCategory("Tất cả")
+        }
     }
 
     @OptIn(ExperimentalBadgeUtils::class)
@@ -85,7 +89,9 @@ class HomeFragment : Fragment() {
     private fun setupCategories() {
         categoryAdapter = CategoryAdapter(
             categoriesList = mutableListOf(),
-            onItemClick = { category -> productViewModel.filterProductsByCategory(category.name) }
+            onItemClick = {
+                category -> productViewModel.filterProductsByCategory(category.name) 
+            }
         )
         binding.rcvCategories.apply {
             layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)

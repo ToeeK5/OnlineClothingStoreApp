@@ -1,7 +1,7 @@
 package com.example.onlineclothingstoreapp.profile
 
 import com.example.onlineclothingstoreapp.firebase.FirebaseService
-import com.example.onlineclothingstoreapp.models.Product
+import com.example.onlineclothingstoreapp.models.home.Product
 
 object QuanLyYeuThich {
 

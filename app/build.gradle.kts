@@ -7,7 +7,7 @@ plugins {
 
 android {
     namespace = "com.example.onlineclothingstoreapp"
-    compileSdk = 36 // Không dùng compileSdk { compileSdk = 36 }, dùng dòng này
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.onlineclothingstoreapp"
@@ -39,6 +39,7 @@ android {
         compose = true
         viewBinding = true
     }
+
 }
 
 dependencies {
