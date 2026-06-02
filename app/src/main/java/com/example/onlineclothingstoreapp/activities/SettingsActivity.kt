@@ -1,21 +1,20 @@
-package com.example.onlineclothingstoreapp.profile
+﻿package com.example.onlineclothingstoreapp.activities
 
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import com.example.onlineclothingstoreapp.R
+import com.example.onlineclothingstoreapp.profile.QuanLyDangXuat
 
-class SettingsFragment : Fragment() {
+class SettingsActivity : AppCompatActivity() {
 
     private lateinit var btnBack: TextView
     private lateinit var seekVolume: SeekBar
@@ -27,31 +26,25 @@ class SettingsFragment : Fragment() {
 
     private lateinit var audioManager: AudioManager
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        val view = inflater.inflate(R.layout.fragment_settings, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.fragment_settings)
 
-        AnhXa(view)
+        AnhXa()
         CaiDatAmLuong()
         SuKien()
-
-        return view
     }
 
-    private fun AnhXa(view: View) {
-        btnBack = view.findViewById(R.id.btnBack)
-        seekVolume = view.findViewById(R.id.seekVolume)
-        layoutSupport = view.findViewById(R.id.layoutSupport)
-        layoutAbout = view.findViewById(R.id.layoutAbout)
-        txtSupportContent = view.findViewById(R.id.txtSupportContent)
-        txtAboutContent = view.findViewById(R.id.txtAboutContent)
-        btnLogout = view.findViewById(R.id.btnLogout)
+    private fun AnhXa() {
+        btnBack = findViewById(R.id.btnBack)
+        seekVolume = findViewById(R.id.seekVolume)
+        layoutSupport = findViewById(R.id.layoutSupport)
+        layoutAbout = findViewById(R.id.layoutAbout)
+        txtSupportContent = findViewById(R.id.txtSupportContent)
+        txtAboutContent = findViewById(R.id.txtAboutContent)
+        btnLogout = findViewById(R.id.btnLogout)
 
-        audioManager =
-            requireContext().getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        audioManager = getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
     private fun CaiDatAmLuong() {
@@ -84,7 +77,7 @@ class SettingsFragment : Fragment() {
 
     private fun SuKien() {
         btnBack.setOnClickListener {
-            ChuyenManHinh.QuayLai(requireActivity())
+            finish()
         }
 
         layoutSupport.setOnClickListener {
@@ -100,22 +93,22 @@ class SettingsFragment : Fragment() {
         }
 
         btnLogout.setOnClickListener {
-            // Tạm thời để trống, lát nối về Login sau
+            QuanLyDangXuat.DangXuat(this)
         }
     }
 
     private fun AnHienNoiDung(textView: TextView) {
-        if (textView.visibility == View.GONE) {
-            textView.visibility = View.VISIBLE
-        } else {
-            textView.visibility = View.GONE
-        }
+        textView.visibility =
+            if (textView.visibility == View.GONE) View.VISIBLE else View.GONE
     }
 
     private fun MoTinNhan(soDienThoai: String) {
         val intent = Intent(Intent.ACTION_SENDTO)
         intent.data = Uri.parse("smsto:$soDienThoai")
-        intent.putExtra("sms_body", "Xin chào, tôi cần hỗ trợ về ứng dụng LUMIÈRE.")
+        intent.putExtra(
+            "sms_body",
+            "Xin chào, tôi cần hỗ trợ về ứng dụng LUMIÈRE."
+        )
         startActivity(intent)
     }
 }

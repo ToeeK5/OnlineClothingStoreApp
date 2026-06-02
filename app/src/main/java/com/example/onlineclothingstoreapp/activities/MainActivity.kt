@@ -1,4 +1,4 @@
-package com.example.onlineclothingstoreapp.activities
+﻿package com.example.onlineclothingstoreapp.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -7,8 +7,8 @@ import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.databinding.ActivityMainBinding
 import com.example.onlineclothingstoreapp.fragment.CartFragment
 import com.example.onlineclothingstoreapp.fragment.HomeFragment
+import com.example.onlineclothingstoreapp.fragment.ProfileFragment
 import com.example.onlineclothingstoreapp.fragment.SearchFragment
-import com.example.onlineclothingstoreapp.profile.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -16,10 +16,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Hiển thị Fragment mặc định (Trang chủ)
+        // Hiển thị Fragment mặc định là Trang chủ
         if (savedInstanceState == null) {
             replaceFragment(HomeFragment())
         }
@@ -28,11 +29,12 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_home -> replaceFragment(HomeFragment())
-                R.id.nav_search -> replaceFragment((SearchFragment()))
+                R.id.nav_search -> replaceFragment(SearchFragment())
                 R.id.nav_cart -> replaceFragment(CartFragment())
                 R.id.nav_profile -> replaceFragment(ProfileFragment())
                 else -> false
             }
+
             true
         }
     }

@@ -1,17 +1,15 @@
-package com.example.onlineclothingstoreapp.profile
+﻿package com.example.onlineclothingstoreapp.activities
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import com.example.onlineclothingstoreapp.R
+import com.example.onlineclothingstoreapp.profile.*
 
-class EditProfileFragment : Fragment() {
+class EditProfileActivity : AppCompatActivity() {
 
     private lateinit var btnBack: TextView
     private lateinit var imgAvatar: TextView
@@ -28,41 +26,35 @@ class EditProfileFragment : Fragment() {
     private lateinit var btnCancel: Button
     private lateinit var btnChangeAvatar: Button
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.fragment_edit_profile)
 
-        val view = inflater.inflate(R.layout.fragment_edit_profile, container, false)
-
-        AnhXa(view)
+        AnhXa()
         TatCheDoChinhSua()
         GanDuLieu()
         SuKien()
-
-        return view
     }
 
-    private fun AnhXa(view: View) {
-        btnBack = view.findViewById(R.id.btnBack)
-        imgAvatar = view.findViewById(R.id.imgAvatar)
+    private fun AnhXa() {
+        btnBack = findViewById(R.id.btnBack)
+        imgAvatar = findViewById(R.id.imgAvatar)
 
-        edtDisplayName = view.findViewById(R.id.edtDisplayName)
-        edtAge = view.findViewById(R.id.edtAge)
-        edtGender = view.findViewById(R.id.edtGender)
-        edtPhone = view.findViewById(R.id.edtPhone)
-        edtBirthday = view.findViewById(R.id.edtBirthday)
-        edtAddress = view.findViewById(R.id.edtAddress)
+        edtDisplayName = findViewById(R.id.edtDisplayName)
+        edtAge = findViewById(R.id.edtAge)
+        edtGender = findViewById(R.id.edtGender)
+        edtPhone = findViewById(R.id.edtPhone)
+        edtBirthday = findViewById(R.id.edtBirthday)
+        edtAddress = findViewById(R.id.edtAddress)
 
-        btnEnableEdit = view.findViewById(R.id.btnEnableEdit)
-        btnSave = view.findViewById(R.id.btnSave)
-        btnCancel = view.findViewById(R.id.btnCancel)
-        btnChangeAvatar = view.findViewById(R.id.btnChangeAvatar)
+        btnEnableEdit = findViewById(R.id.btnEnableEdit)
+        btnSave = findViewById(R.id.btnSave)
+        btnCancel = findViewById(R.id.btnCancel)
+        btnChangeAvatar = findViewById(R.id.btnChangeAvatar)
     }
 
     private fun GanDuLieu() {
-        QuanLyThongTinNguoiDung.TaiThongTin(requireContext()) {
+        QuanLyThongTinNguoiDung.TaiThongTin(this) {
             edtDisplayName.setText(QuanLyThongTinNguoiDung.tenHienThi)
             edtAge.setText(QuanLyThongTinNguoiDung.tuoi)
             edtGender.setText(QuanLyThongTinNguoiDung.gioiTinh)
@@ -89,16 +81,16 @@ class EditProfileFragment : Fragment() {
         }
 
         btnCancel.setOnClickListener {
-            ChuyenManHinh.QuayLai(requireActivity())
+            finish()
         }
 
         btnBack.setOnClickListener {
-            ChuyenManHinh.QuayLai(requireActivity())
+            finish()
         }
 
         btnChangeAvatar.setOnClickListener {
             Toast.makeText(
-                requireContext(),
+                this,
                 "Chức năng đổi avatar đang phát triển",
                 Toast.LENGTH_SHORT
             ).show()
@@ -112,7 +104,6 @@ class EditProfileFragment : Fragment() {
         edtPhone.isEnabled = true
         edtBirthday.isEnabled = true
         edtAddress.isEnabled = true
-
         btnSave.isEnabled = true
     }
 
@@ -123,13 +114,12 @@ class EditProfileFragment : Fragment() {
         edtPhone.isEnabled = false
         edtBirthday.isEnabled = false
         edtAddress.isEnabled = false
-
         btnSave.isEnabled = false
     }
 
     private fun LuuThongTin() {
         QuanLyThongTinNguoiDung.LuuThongTin(
-            requireContext(),
+            this,
             edtDisplayName.text.toString(),
             edtAge.text.toString(),
             edtGender.text.toString(),
@@ -139,11 +129,11 @@ class EditProfileFragment : Fragment() {
         )
 
         Toast.makeText(
-            requireContext(),
+            this,
             "Đã lưu thông tin",
             Toast.LENGTH_SHORT
         ).show()
-
-        ChuyenManHinh.QuayLai(requireActivity())
+        finish()
     }
 }
+

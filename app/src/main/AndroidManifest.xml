@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.onlineclothingstoreapp">
@@ -81,6 +81,11 @@
                 android:name="androidx.emoji2.text.EmojiCompatInitializer"
                 android:value="removed"
                 tools:replace="android:value" /> </provider>
+            <activity android:name=".activities.EditProfileActivity" />
+            <activity android:name=".activities.WishlistActivity" />
+            <activity android:name=".activities.SettingsActivity" />
+            <activity android:name=".activities.PaymentActivity" />
     </application>
 
 </manifest>
+

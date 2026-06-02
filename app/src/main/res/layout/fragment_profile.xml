@@ -72,7 +72,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:gravity="center"
-                android:text="C"
+                android:text="U"
                 android:textColor="#FFFFFF"
                 android:textSize="42sp"
                 android:textStyle="bold" />
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:text="Đinh Hoàng Cước"
+                android:text="Đang tải..."
                 android:textAlignment="center"
                 android:textColor="#1B1C1C"
                 android:textSize="24sp"
@@ -94,7 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:layout_marginBottom="18dp"
-                android:text="cuoc@example.com"
+                android:text=""
                 android:textAlignment="center"
                 android:textColor="#76786F"
                 android:textSize="15sp" />

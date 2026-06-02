@@ -1,4 +1,16 @@
-﻿package com.example.onlineclothingstoreapp.fragment
+$base = "app/src/main/java/com/example/onlineclothingstoreapp"
+$profilePath = "$base/profile"
+$fragmentPath = "$base/fragment"
+$activitiesPath = "$base/activities"
+$manifestPath = "app/src/main/AndroidManifest.xml"
+
+# Đảm bảo thư mục tồn tại
+New-Item -ItemType Directory -Force -Path $fragmentPath | Out-Null
+New-Item -ItemType Directory -Force -Path $activitiesPath | Out-Null
+
+# 1. Tạo ProfileFragment đúng package fragment
+@'
+package com.example.onlineclothingstoreapp.fragment
 
 import android.content.Intent
 import android.os.Bundle
@@ -121,3 +133,81 @@ class ProfileFragment : Fragment() {
         }
     }
 }
+'@ | Set-Content "$fragmentPath/ProfileFragment.kt" -Encoding UTF8
+
+# 2. Di chuyển Activity từ profile sang activities và đổi package
+$activityFiles = @(
+    "EditProfileActivity.kt",
+    "WishlistActivity.kt",
+    "SettingsActivity.kt",
+    "PaymentActivity.kt"
+)
+
+foreach ($file in $activityFiles) {
+    $oldFile = "$profilePath/$file"
+    $newFile = "$activitiesPath/$file"
+
+    if (Test-Path $oldFile) {
+        $content = Get-Content $oldFile -Raw
+        $content = $content -replace "package com\.example\.onlineclothingstoreapp\.profile", "package com.example.onlineclothingstoreapp.activities"
+
+        if ($content -notmatch "import com\.example\.onlineclothingstoreapp\.profile\.") {
+            $content = $content -replace "import com\.example\.onlineclothingstoreapp\.R", "import com.example.onlineclothingstoreapp.R`r`nimport com.example.onlineclothingstoreapp.profile.*"
+        }
+
+        Set-Content $newFile $content -Encoding UTF8
+        Remove-Item $oldFile -Force
+    }
+}
+
+# 3. Xóa các Fragment phụ dư trong package profile
+$oldFragments = @(
+    "$profilePath/ProfileFragment.kt",
+    "$profilePath/EditProfileFragment.kt",
+    "$profilePath/WishlistFragment.kt",
+    "$profilePath/SettingsFragment.kt",
+    "$profilePath/PaymentFragment.kt"
+)
+
+foreach ($file in $oldFragments) {
+    if (Test-Path $file) {
+        Remove-Item $file -Force
+    }
+}
+
+# 4. Sửa MainActivity import ProfileFragment về package fragment
+$mainActivity = "$activitiesPath/MainActivity.kt"
+
+if (Test-Path $mainActivity) {
+    $main = Get-Content $mainActivity -Raw
+    $main = $main -replace "import com\.example\.onlineclothingstoreapp\.profile\.ProfileFragment", "import com.example.onlineclothingstoreapp.fragment.ProfileFragment"
+    Set-Content $mainActivity $main -Encoding UTF8
+}
+
+# 5. Sửa AndroidManifest khai báo Activity đúng package activities
+if (Test-Path $manifestPath) {
+    $manifest = Get-Content $manifestPath -Raw
+
+    $manifest = $manifest -replace '\.profile\.EditProfileActivity', '.activities.EditProfileActivity'
+    $manifest = $manifest -replace '\.profile\.WishlistActivity', '.activities.WishlistActivity'
+    $manifest = $manifest -replace '\.profile\.SettingsActivity', '.activities.SettingsActivity'
+    $manifest = $manifest -replace '\.profile\.PaymentActivity', '.activities.PaymentActivity'
+
+    $activities = @(
+        '<activity android:name=".activities.EditProfileActivity" />',
+        '<activity android:name=".activities.WishlistActivity" />',
+        '<activity android:name=".activities.SettingsActivity" />',
+        '<activity android:name=".activities.PaymentActivity" />'
+    )
+
+    foreach ($activity in $activities) {
+        if ($manifest -notlike "*$activity*") {
+            $manifest = $manifest -replace "</application>", "        $activity`r`n    </application>"
+        }
+    }
+
+    Set-Content $manifestPath $manifest -Encoding UTF8
+}
+
+Write-Host "DONE: Da chuyen ProfileFragment ve package fragment, chuyen Activity ve package activities, xoa Fragment du." -ForegroundColor Green
+Write-Host "Tiep theo chay: .\gradlew assembleDebug" -ForegroundColor Yellow
