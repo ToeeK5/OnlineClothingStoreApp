@@ -67,6 +67,21 @@
             android:name=".activities.home.CollectionOrOfferActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.profile.EditProfileActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.profile.WishlistActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.profile.SettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".activities.profile.PaymentActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.MainActivity"
             android:exported="true"
             android:label="@string/app_name"

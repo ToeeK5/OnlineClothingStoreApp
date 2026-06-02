@@ -8,7 +8,7 @@ import com.example.onlineclothingstoreapp.databinding.ActivityMainBinding
 import com.example.onlineclothingstoreapp.fragment.CartFragment
 import com.example.onlineclothingstoreapp.fragment.HomeFragment
 import com.example.onlineclothingstoreapp.fragment.SearchFragment
-import com.example.onlineclothingstoreapp.profile.ProfileFragment
+import com.example.onlineclothingstoreapp.fragment.ProfileFragment
 
 class MainActivity : AppCompatActivity() {
 
