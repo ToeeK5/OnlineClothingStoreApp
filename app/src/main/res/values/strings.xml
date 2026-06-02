@@ -93,7 +93,7 @@
     <string name="total">Tổng cộng</string>
     <string name="total_value">300,000 VNĐ</string>
 
-    <string name="checkout_now">CHECKOUT NOW</string>
+    <string name="checkout_now">ĐẶT HÀNG</string>
     <string name="secure_transaction">Giao dịch được bảo mật</string>
     <string name="price_checkout">$205.00</string>
     <string name="place_order">PLACE ORDER</string>

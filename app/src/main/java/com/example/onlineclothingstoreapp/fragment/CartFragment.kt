@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import com.example.onlineclothingstoreapp.activities.ProductDetailActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -88,6 +89,22 @@ class CartFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
+            },
+            onItemClick = { item ->
+                if (item.productId.isBlank()) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Không tìm thấy mã sản phẩm",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    return@CartAdapter
+                }
+
+                val intent = Intent(requireContext(), ProductDetailActivity::class.java).apply {
+                    putExtra("PRODUCT_ID", item.productId)
+                }
+
+                startActivity(intent)
             }
         )
 

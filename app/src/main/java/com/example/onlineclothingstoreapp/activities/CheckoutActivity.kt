@@ -78,7 +78,20 @@ class CheckoutActivity : AppCompatActivity() {
     }
 
     private fun setupProductRecyclerView() {
-        checkoutProductAdapter = CheckoutProductAdapter(emptyList())
+        checkoutProductAdapter = CheckoutProductAdapter(
+            items = emptyList(),
+            onItemClick = { item ->
+                if (item.productId.isNotBlank()) {
+                    val intent = Intent(this, ProductDetailActivity::class.java).apply {
+                        putExtra("PRODUCT_ID", item.productId)
+                    }
+
+                    startActivity(intent)
+                } else {
+                    Toast.makeText(this, "Không tìm thấy mã sản phẩm", Toast.LENGTH_SHORT).show()
+                }
+            }
+        )
 
         binding.recyclerCheckoutProducts.layoutManager = LinearLayoutManager(this)
         binding.recyclerCheckoutProducts.adapter = checkoutProductAdapter
