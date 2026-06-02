@@ -2,34 +2,47 @@ package com.example.onlineclothingstoreapp.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.adapters.AddressAdapter
 import com.example.onlineclothingstoreapp.databinding.ActivityAddressBinding
 import com.example.onlineclothingstoreapp.models.Address
 import com.example.onlineclothingstoreapp.repository.AddressRepository
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
-import com.example.onlineclothingstoreapp.R
+import com.google.firebase.auth.FirebaseAuth
+
 class AddressActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddressBinding
     private lateinit var addressAdapter: AddressAdapter
 
+    private val auth = FirebaseAuth.getInstance()
     private val addressRepository = AddressRepository()
-    private val userId = "demo_user_01"
+
+    private var userId: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddressBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để xem địa chỉ", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        userId = currentUser.uid
 
         setupRecyclerView()
         setupEvents()
@@ -38,7 +51,10 @@ class AddressActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadAddresses()
+
+        if (userId.isNotBlank()) {
+            loadAddresses()
+        }
     }
 
     private fun setupRecyclerView() {
@@ -99,6 +115,7 @@ class AddressActivity : AppCompatActivity() {
             }
         }
     }
+
     private fun setupSwipeToDelete() {
         val deleteIcon = ContextCompat.getDrawable(this, R.drawable.delete)
         val background = ColorDrawable(Color.RED)
@@ -172,6 +189,7 @@ class AddressActivity : AppCompatActivity() {
 
         ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(binding.recyclerAddresses)
     }
+
     private fun deleteAddress(address: Address) {
         addressRepository.deleteAddress(userId, address.id) { success ->
             if (success) {
@@ -179,6 +197,7 @@ class AddressActivity : AppCompatActivity() {
                 loadAddresses()
             } else {
                 Toast.makeText(this, "Xóa địa chỉ thất bại", Toast.LENGTH_SHORT).show()
+                addressAdapter.notifyDataSetChanged()
             }
         }
     }

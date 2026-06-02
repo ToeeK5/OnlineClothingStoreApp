@@ -5,10 +5,12 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.adapters.OrderHistoryAdapter
 import com.example.onlineclothingstoreapp.databinding.ActivityOrderHistoryBinding
 import com.example.onlineclothingstoreapp.models.Order
 import com.example.onlineclothingstoreapp.repository.OrderRepository
+import com.google.firebase.auth.FirebaseAuth
 
 class OrderHistoryActivity : AppCompatActivity() {
 
@@ -16,8 +18,9 @@ class OrderHistoryActivity : AppCompatActivity() {
     private lateinit var orderAdapter: OrderHistoryAdapter
 
     private val orderRepository = OrderRepository()
-    private val userId = "demo_user_01"
+    private val auth = FirebaseAuth.getInstance()
 
+    private var userId: String = ""
     private var allOrders: List<Order> = emptyList()
     private var currentTab = TAB_STATUS
 
@@ -25,6 +28,15 @@ class OrderHistoryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityOrderHistoryBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để xem đơn hàng", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        userId = currentUser.uid
 
         setupRecyclerView()
         setupEvents()
@@ -38,11 +50,10 @@ class OrderHistoryActivity : AppCompatActivity() {
             orders = emptyList(),
             statuses = emptyList(),
             onOrderClick = { order ->
-                Toast.makeText(
-                    this,
-                    "Mã đơn: ${order.id}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                val intent = android.content.Intent(this, OrderDetailActivity::class.java).apply {
+                    putExtra(OrderDetailActivity.EXTRA_ORDER_ID, order.id)
+                }
+                startActivity(intent)
             }
         )
 
@@ -120,17 +131,17 @@ class OrderHistoryActivity : AppCompatActivity() {
 
     private fun updateTabUI() {
         if (currentTab == TAB_STATUS) {
-            binding.txtTabStatus.setBackgroundResource(com.example.onlineclothingstoreapp.R.drawable.bg_checkout_button)
-            binding.txtTabStatus.setTextColor(getColor(com.example.onlineclothingstoreapp.R.color.white))
+            binding.txtTabStatus.setBackgroundResource(R.drawable.bg_checkout_button)
+            binding.txtTabStatus.setTextColor(getColor(R.color.white))
 
             binding.txtTabHistory.background = null
-            binding.txtTabHistory.setTextColor(getColor(com.example.onlineclothingstoreapp.R.color.text_dark))
+            binding.txtTabHistory.setTextColor(getColor(R.color.text_dark))
         } else {
-            binding.txtTabHistory.setBackgroundResource(com.example.onlineclothingstoreapp.R.drawable.bg_checkout_button)
-            binding.txtTabHistory.setTextColor(getColor(com.example.onlineclothingstoreapp.R.color.white))
+            binding.txtTabHistory.setBackgroundResource(R.drawable.bg_checkout_button)
+            binding.txtTabHistory.setTextColor(getColor(R.color.white))
 
             binding.txtTabStatus.background = null
-            binding.txtTabStatus.setTextColor(getColor(com.example.onlineclothingstoreapp.R.color.text_dark))
+            binding.txtTabStatus.setTextColor(getColor(R.color.text_dark))
         }
     }
 

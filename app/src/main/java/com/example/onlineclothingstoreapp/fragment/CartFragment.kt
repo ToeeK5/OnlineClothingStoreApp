@@ -1,41 +1,40 @@
 package com.example.onlineclothingstoreapp.fragment
 
 import android.content.Intent
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.onlineclothingstoreapp.R
 import com.example.onlineclothingstoreapp.activities.CheckoutActivity
 import com.example.onlineclothingstoreapp.adapters.CartAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentCartBinding
 import com.example.onlineclothingstoreapp.models.CartItem
 import com.example.onlineclothingstoreapp.repository.CartRepository
+import com.google.firebase.auth.FirebaseAuth
 import java.text.NumberFormat
 import java.util.Locale
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.RecyclerView
-import com.example.onlineclothingstoreapp.R
-import com.google.firebase.auth.FirebaseAuth // Thêm thư viện Firebase Auth này vào
 
 class CartFragment : Fragment() {
 
     private var _binding: FragmentCartBinding? = null
     private val binding get() = _binding!!
 
-    private val cartRepository = CartRepository()
     private lateinit var cartAdapter: CartAdapter
 
-    // 1. THAY ĐỔI: Sử dụng hàm getter để lấy ID động mỗi lần cần dùng
-    private val currentUserId: String?
-        get() = FirebaseAuth.getInstance().currentUser?.uid
+    private val auth = FirebaseAuth.getInstance()
+    private val cartRepository = CartRepository()
 
+    private var userId: String = ""
     private var cartList: List<CartItem> = emptyList()
 
     override fun onCreateView(
@@ -50,29 +49,38 @@ class CartFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 2. THAY ĐỔI: Kiểm tra xem người dùng đã đăng nhập chưa trước khi load dữ liệu
-        val userId = currentUserId
-        if (userId == null) {
+        val currentUser = auth.currentUser
+
+        if (currentUser == null) {
             showEmptyCart()
-            Toast.makeText(requireContext(), "Vui lòng đăng nhập để xem giỏ hàng", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                "Vui lòng đăng nhập để xem giỏ hàng",
+                Toast.LENGTH_SHORT
+            ).show()
             return
         }
 
-        setupRecyclerView(userId) // Truyền userId vào cấu hình RecyclerView
+        userId = currentUser.uid
+
+        setupRecyclerView()
         setupEvents()
-        observeCart(userId)       // Truyền userId vào để theo dõi đúng giỏ hàng
+        observeCart()
     }
 
-    // 3. THAY ĐỔI: Nhận userId động để gọi hàm xử lý tăng/giảm số lượng
-    private fun setupRecyclerView(userId: String) {
+    private fun setupRecyclerView() {
         cartAdapter = CartAdapter(
             items = emptyList(),
             onIncrease = { item ->
-                cartRepository.increaseQuantity(userId, item.id)
+                if (userId.isNotBlank()) {
+                    cartRepository.increaseQuantity(userId, item.id)
+                }
             },
             onDecrease = { item ->
                 if (item.quantity > 1) {
-                    cartRepository.decreaseQuantity(userId, item.id)
+                    if (userId.isNotBlank()) {
+                        cartRepository.decreaseQuantity(userId, item.id)
+                    }
                 } else {
                     Toast.makeText(
                         requireContext(),
@@ -80,45 +88,54 @@ class CartFragment : Fragment() {
                         Toast.LENGTH_SHORT
                     ).show()
                 }
-            },
+            }
         )
 
         binding.recyclerCart.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerCart.adapter = cartAdapter
 
-        setupSwipeToDelete(userId) // Truyền tiếp xuống cho chức năng vuốt để xóa
+        setupSwipeToDelete()
     }
 
     private fun setupEvents() {
         binding.btnCheckoutNow.setOnClickListener {
+            if (userId.isBlank()) {
+                Toast.makeText(
+                    requireContext(),
+                    "Vui lòng đăng nhập để thanh toán",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return@setOnClickListener
+            }
+
             if (cartList.isEmpty()) {
                 Toast.makeText(
                     requireContext(),
                     "Giỏ hàng đang trống",
                     Toast.LENGTH_SHORT
                 ).show()
-            } else {
-                val subtotal = calculateSubtotal(cartList)
-                val shippingFee = 0.0
-                val tax = 0.0
-                val total = subtotal + shippingFee + tax
-                val count = cartList.sumOf { it.quantity }
-
-                val intent = Intent(requireContext(), CheckoutActivity::class.java).apply {
-                    putExtra(CheckoutActivity.EXTRA_SUBTOTAL, subtotal)
-                    putExtra(CheckoutActivity.EXTRA_SHIPPING, shippingFee)
-                    putExtra(CheckoutActivity.EXTRA_TAX, tax)
-                    putExtra(CheckoutActivity.EXTRA_TOTAL, total)
-                    putExtra(CheckoutActivity.EXTRA_ITEM_COUNT, count)
-                }
-
-                startActivity(intent)
+                return@setOnClickListener
             }
+
+            val subtotal = calculateSubtotal(cartList)
+            val shippingFee = 0.0
+            val tax = 0.0
+            val total = subtotal + shippingFee + tax
+            val count = cartList.sumOf { it.quantity }
+
+            val intent = Intent(requireContext(), CheckoutActivity::class.java).apply {
+                putExtra(CheckoutActivity.EXTRA_SUBTOTAL, subtotal)
+                putExtra(CheckoutActivity.EXTRA_SHIPPING, shippingFee)
+                putExtra(CheckoutActivity.EXTRA_TAX, tax)
+                putExtra(CheckoutActivity.EXTRA_TOTAL, total)
+                putExtra(CheckoutActivity.EXTRA_ITEM_COUNT, count)
+            }
+
+            startActivity(intent)
         }
     }
 
-    // 4. THAY ĐỔI: Nhận userId động để lắng nghe sự thay đổi giỏ hàng từ Firebase
-    private fun observeCart(userId: String) {
+    private fun observeCart() {
         cartRepository.getCartItems(userId).observe(viewLifecycleOwner) { items ->
             cartList = items
             cartAdapter.updateData(items)
@@ -132,38 +149,7 @@ class CartFragment : Fragment() {
         }
     }
 
-    private fun showEmptyCart() {
-        binding.layoutEmptyCart.visibility = View.VISIBLE
-        binding.recyclerCart.visibility = View.GONE
-        binding.orderSummaryCard.visibility = View.GONE
-        binding.secureTransactionLayout.visibility = View.GONE
-        binding.txtYourChoice.visibility = View.GONE
-    }
-
-    private fun showCartItems() {
-        binding.layoutEmptyCart.visibility = View.GONE
-        binding.recyclerCart.visibility = View.VISIBLE
-        binding.orderSummaryCard.visibility = View.VISIBLE
-        binding.secureTransactionLayout.visibility = View.VISIBLE
-        binding.txtYourChoice.visibility = View.VISIBLE
-    }
-
-    private fun calculateSubtotal(items: List<CartItem>): Double {
-        return items.sumOf { it.price * it.quantity }
-    }
-
-    private fun updateCartSummary(items: List<CartItem>) {
-        val subtotal = calculateSubtotal(items)
-        val shippingFee = 0.0
-        val tax = 0.0
-        val total = subtotal + shippingFee + tax
-
-        binding.txtSubtotalValue.text = formatMoney(subtotal)
-        binding.txtTotalValue.text = formatMoney(total)
-    }
-
-    // 5. THAY ĐỔI: Nhận userId để biết cần xóa sản phẩm ở giỏ hàng của ai
-    private fun setupSwipeToDelete(userId: String) {
+    private fun setupSwipeToDelete() {
         val deleteIcon = ContextCompat.getDrawable(requireContext(), R.drawable.delete)
         val background = ColorDrawable(Color.RED)
 
@@ -184,7 +170,7 @@ class CartFragment : Fragment() {
 
                 if (position != RecyclerView.NO_POSITION) {
                     val item = cartAdapter.getItem(position)
-                    deleteCartItem(userId, item) // Truyền thêm userId vào đây
+                    deleteCartItem(item)
                 }
             }
 
@@ -238,14 +224,44 @@ class CartFragment : Fragment() {
             .attachToRecyclerView(binding.recyclerCart)
     }
 
-    // 6. THAY ĐỔI: Truyền userId thực tế vào hàm delete của Repository
-    private fun deleteCartItem(userId: String, item: CartItem) {
+    private fun deleteCartItem(item: CartItem) {
+        if (userId.isBlank()) return
+
         cartRepository.deleteCartItem(userId, item.id)
+
         Toast.makeText(
             requireContext(),
             "Đã xóa sản phẩm khỏi giỏ hàng",
             Toast.LENGTH_SHORT
         ).show()
+    }
+
+    private fun showEmptyCart() {
+        binding.layoutEmptyCart.visibility = View.VISIBLE
+        binding.recyclerCart.visibility = View.GONE
+        binding.orderSummaryCard.visibility = View.GONE
+        binding.secureTransactionLayout.visibility = View.GONE
+        binding.txtYourChoice.visibility = View.GONE
+    }
+
+    private fun showCartItems() {
+        binding.layoutEmptyCart.visibility = View.GONE
+        binding.recyclerCart.visibility = View.VISIBLE
+        binding.orderSummaryCard.visibility = View.VISIBLE
+        binding.secureTransactionLayout.visibility = View.VISIBLE
+        binding.txtYourChoice.visibility = View.VISIBLE
+    }
+
+    private fun calculateSubtotal(items: List<CartItem>): Double {
+        return items.sumOf { it.price * it.quantity }
+    }
+
+    private fun updateCartSummary(items: List<CartItem>) {
+        val subtotal = calculateSubtotal(items)
+        val total = subtotal
+
+        binding.txtSubtotalValue.text = formatMoney(subtotal)
+        binding.txtTotalValue.text = formatMoney(total)
     }
 
     private fun formatMoney(amount: Double): String {

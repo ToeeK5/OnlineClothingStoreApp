@@ -2,6 +2,7 @@ package com.example.onlineclothingstoreapp.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.onlineclothingstoreapp.models.OrderItem
 import com.example.onlineclothingstoreapp.firebase.FirebaseService
 import com.example.onlineclothingstoreapp.models.Address
 import com.example.onlineclothingstoreapp.models.CartItem
@@ -173,6 +174,72 @@ class OrderRepository {
                 }.sortedBy { it.sort }
 
                 liveData.value = statuses
+            }
+
+        return liveData
+    }
+
+    fun getOrderById(orderId: String): LiveData<Order?> {
+        val liveData = MutableLiveData<Order?>()
+
+        firebaseService.db.collection("orders")
+            .document(orderId)
+            .addSnapshotListener { doc, error ->
+                if (error != null || doc == null || !doc.exists()) {
+                    liveData.value = null
+                    return@addSnapshotListener
+                }
+
+                val order = Order(
+                    id = doc.id,
+                    userId = doc.getString("userId") ?: "",
+                    addressId = doc.getString("addressId") ?: "",
+                    receiverName = doc.getString("receiverName") ?: "",
+                    receiverPhone = doc.getString("receiverPhone") ?: "",
+                    receiverAddress = doc.getString("receiverAddress") ?: "",
+                    paymentMethod = doc.getString("paymentMethod") ?: "COD",
+                    subtotal = doc.getDouble("subtotal") ?: 0.0,
+                    shippingFee = doc.getDouble("shippingFee") ?: 0.0,
+                    tax = doc.getDouble("tax") ?: 0.0,
+                    total = doc.getDouble("total") ?: 0.0,
+                    statusId = doc.getString("statusId")
+                        ?: doc.getString("status")
+                        ?: "PENDING",
+                    createdAt = doc.getTimestamp("createdAt")
+                )
+
+                liveData.value = order
+            }
+
+        return liveData
+    }
+
+    fun getOrderItems(orderId: String): LiveData<List<OrderItem>> {
+        val liveData = MutableLiveData<List<OrderItem>>()
+
+        firebaseService.db.collection("orders")
+            .document(orderId)
+            .collection("items")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null || snapshot == null) {
+                    liveData.value = emptyList()
+                    return@addSnapshotListener
+                }
+
+                val items = snapshot.documents.map { doc ->
+                    OrderItem(
+                        id = doc.id,
+                        productId = doc.getString("productId") ?: "",
+                        productName = doc.getString("productName") ?: "",
+                        productImageUrl = doc.getString("productImageUrl") ?: "",
+                        selectedSize = doc.getString("selectedSize") ?: "",
+                        selectedColor = doc.getString("selectedColor") ?: "",
+                        price = doc.getDouble("price") ?: 0.0,
+                        quantity = doc.getLong("quantity")?.toInt() ?: 1
+                    )
+                }
+
+                liveData.value = items
             }
 
         return liveData

@@ -6,20 +6,31 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.onlineclothingstoreapp.databinding.ActivityAddAddressBinding
 import com.example.onlineclothingstoreapp.models.Address
 import com.example.onlineclothingstoreapp.repository.AddressRepository
+import com.google.firebase.auth.FirebaseAuth
 
 class AddAddressActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAddAddressBinding
 
+    private val auth = FirebaseAuth.getInstance()
     private val addressRepository = AddressRepository()
-    private val userId = "demo_user_01"
 
+    private var userId: String = ""
     private var isSaving = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityAddAddressBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            Toast.makeText(this, "Vui lòng đăng nhập để thêm địa chỉ", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
+
+        userId = currentUser.uid
 
         setupEvents()
     }
@@ -60,7 +71,11 @@ class AddAddressActivity : AppCompatActivity() {
         binding.btnSaveAddress.isEnabled = false
         binding.btnSaveAddress.text = "Đang lưu..."
 
-        addressRepository.getAddresses(userId).observe(this) { addresses ->
+        val liveData = addressRepository.getAddresses(userId)
+
+        liveData.observe(this) { addresses ->
+            liveData.removeObservers(this)
+
             val isFirstAddress = addresses.isEmpty()
 
             val address = Address(
@@ -78,6 +93,7 @@ class AddAddressActivity : AppCompatActivity() {
 
                 if (success) {
                     Toast.makeText(this, "Đã thêm địa chỉ", Toast.LENGTH_SHORT).show()
+                    setResult(RESULT_OK)
                     finish()
                 } else {
                     Toast.makeText(this, "Thêm địa chỉ thất bại", Toast.LENGTH_SHORT).show()

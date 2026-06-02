@@ -183,6 +183,25 @@
     <string name="b_n_ch_a_c_n_h_ng_n_o">Bạn chưa có đơn hàng nào</string>
     <string name="c_c_n_h_ng_sau_khi_t_s_hi_n_th_t_i_y">Các đơn hàng sau khi đặt sẽ hiển thị tại đây.</string>
     <string name="tr_ti_n_m_t_sau_khi_nh_n_c_h_ng">Trả tiền mặt sau khi nhận được hàng</string>
+    <string name="chi_ti_t_n_h_ng">Chi tiết đơn hàng</string>
+    <string name="n_h_ng_abc1233">Đơn hàng #ABC123</string>
+    <string name="ang_x_l3">Đang xử lý</string>
+    <string name="ng_y_t_ang_c_p_nh_t">Ngày đặt: Đang cập nhật</string>
+    <string name="thanh_to_n_cod3">Thanh toán: COD</string>
+    <string name="th_ng_tin_nh_n_h_ng">Thông tin nhận hàng</string>
+    <string name="ng_i_nh_n">Người nhận</string>
+    <string name="s_i_n_tho_i3">Số điện thoại</string>
+    <string name="a_ch">Địa chỉ</string>
+    <string name="s_n_ph_m3">Sản phẩm</string>
+    <string name="thanh_to_n3">Thanh toán</string>
+    <string name="t_m_t_nh3">Tạm tính</string>
+    <string name="_03">0 đ</string>
+    <string name="t_ng_thanh_to_n3">Tổng thanh toán</string>
+    <string name="_033">0 đ</string>
+    <string name="t_n_s_n_ph_m2">Tên sản phẩm</string>
+    <string name="size_m_black">Size M / Black</string>
+    <string name="_100_000">100.000 đ</string>
+    <string name="x111">x1</string>
 
 
 </resources>
