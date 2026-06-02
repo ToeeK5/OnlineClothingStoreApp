@@ -1,5 +1,6 @@
 package com.example.onlineclothingstoreapp.repository.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.onlineclothingstoreapp.firebase.FirebaseService
@@ -50,6 +51,7 @@ class ProductRepository {
         if (productId.isBlank()) {
             return data
         }
+
         firebaseService.db.collection("products").document(productId).get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {

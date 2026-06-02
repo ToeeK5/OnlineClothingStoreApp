@@ -9,7 +9,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.onlineclothingstoreapp.activities.AddressActivity
+import com.example.onlineclothingstoreapp.activities.cart.AddressActivity
 import com.example.onlineclothingstoreapp.activities.cart.OrderSuccessActivity
 import com.example.onlineclothingstoreapp.activities.cart.QrPaymentActivity
 import com.example.onlineclothingstoreapp.activities.home.ProductDetailActivity

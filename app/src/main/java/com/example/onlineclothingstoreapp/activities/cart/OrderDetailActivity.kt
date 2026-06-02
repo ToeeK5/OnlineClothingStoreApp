@@ -7,8 +7,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.onlineclothingstoreapp.databinding.ActivityOrderDetailBinding
-import com.example.onlineclothingstoreapp.models.Order
-import com.example.onlineclothingstoreapp.repository.OrderRepository
+import com.example.onlineclothingstoreapp.models.cart.Order
+import com.example.onlineclothingstoreapp.models.OrderItem
+import com.example.onlineclothingstoreapp.repository.cart.OrderRepository
 import com.example.onlineclothingstoreapp.adapters.OrderDetailProductAdapter
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
@@ -56,7 +57,7 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun loadOrderDetail() {
-        orderRepository.getOrderById(orderId).observe(this) { order ->
+        orderRepository.getOrderById(orderId).observe(this) { order: Order? ->
             if (order == null) {
                 Toast.makeText(this, "Không tìm thấy đơn hàng", Toast.LENGTH_SHORT).show()
                 finish()
@@ -68,7 +69,7 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun loadOrderItems() {
-        orderRepository.getOrderItems(orderId).observe(this) { items ->
+        orderRepository.getOrderItems(orderId).observe(this) { items: List<OrderItem> ->
             productAdapter.updateData(items)
         }
     }
