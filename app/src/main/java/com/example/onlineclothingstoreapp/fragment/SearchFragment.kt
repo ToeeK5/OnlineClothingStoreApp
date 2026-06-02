@@ -14,10 +14,10 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.onlineclothingstoreapp.activities.ProductDetailActivity
-import com.example.onlineclothingstoreapp.adapters.ProductAdapter
+import com.example.onlineclothingstoreapp.activities.home.ProductDetailActivity
+import com.example.onlineclothingstoreapp.adapters.home.ProductAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentSearchBinding
-import com.example.onlineclothingstoreapp.models.Product
+import com.example.onlineclothingstoreapp.models.home.Product
 import com.google.firebase.firestore.Query
 import com.google.firebase.firestore.FirebaseFirestore
 

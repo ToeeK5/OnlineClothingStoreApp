@@ -10,8 +10,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.onlineclothingstoreapp.R
-import com.example.onlineclothingstoreapp.activities.OrderHistoryActivity
-import com.example.onlineclothingstoreapp.activities.CheckoutActivity
+import com.example.onlineclothingstoreapp.activities.cart.OrderHistoryActivity
+import com.example.onlineclothingstoreapp.activities.cart.CheckoutActivity
 
 class ProfileFragment : Fragment() {
 

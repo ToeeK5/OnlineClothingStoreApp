@@ -11,22 +11,21 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.example.onlineclothingstoreapp.activities.ProductDetailActivity
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.onlineclothingstoreapp.R
-import com.example.onlineclothingstoreapp.activities.CheckoutActivity
-import com.example.onlineclothingstoreapp.adapters.CartAdapter
+import com.example.onlineclothingstoreapp.activities.cart.CheckoutActivity
+import com.example.onlineclothingstoreapp.activities.home.ProductDetailActivity
+import com.example.onlineclothingstoreapp.adapters.cart.CartAdapter
 import com.example.onlineclothingstoreapp.databinding.FragmentCartBinding
-import com.example.onlineclothingstoreapp.models.CartItem
-import com.example.onlineclothingstoreapp.repository.CartRepository
+import com.example.onlineclothingstoreapp.models.cart.CartItem
+import com.example.onlineclothingstoreapp.repository.cart.CartRepository
 import com.google.firebase.auth.FirebaseAuth
 import java.text.NumberFormat
 import java.util.Locale
 
 class CartFragment : Fragment() {
-
     private var _binding: FragmentCartBinding? = null
     private val binding get() = _binding!!
 

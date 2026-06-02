@@ -3,10 +3,10 @@ package com.example.onlineclothingstoreapp.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.onlineclothingstoreapp.models.BannerItem
-import com.example.onlineclothingstoreapp.models.Category
-import com.example.onlineclothingstoreapp.models.Product
-import com.example.onlineclothingstoreapp.repository.ProductRepository
+import com.example.onlineclothingstoreapp.models.home.BannerItem
+import com.example.onlineclothingstoreapp.models.home.Category
+import com.example.onlineclothingstoreapp.models.home.Product
+import com.example.onlineclothingstoreapp.repository.home.ProductRepository
 
 class ProductViewmodel : ViewModel() {
     private val repository = ProductRepository()
