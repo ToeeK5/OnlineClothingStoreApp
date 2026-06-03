@@ -11,6 +11,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.onlineclothingstoreapp.R
+import com.example.onlineclothingstoreapp.activities.cart.OrderHistoryActivity
 import com.example.onlineclothingstoreapp.activities.profile.EditProfileActivity
 import com.example.onlineclothingstoreapp.activities.profile.PaymentActivity
 import com.example.onlineclothingstoreapp.activities.profile.SettingsActivity
@@ -91,10 +92,8 @@ class ProfileFragment : Fragment() {
         }
 
         btnMyOrders.setOnClickListener {
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, CartFragment())
-                .addToBackStack(null)
-                .commit()
+            val intent = Intent(requireContext(), OrderHistoryActivity::class.java)
+            startActivity(intent)
         }
 
         btnWishlist.setOnClickListener {
@@ -120,6 +119,7 @@ class ProfileFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         if (::tvUserName.isInitialized) {
             GanDuLieu()
         }
