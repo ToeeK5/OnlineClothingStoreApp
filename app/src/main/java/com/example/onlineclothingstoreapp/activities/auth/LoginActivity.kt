@@ -238,10 +238,27 @@ class LoginActivity : AppCompatActivity() {
                 setLoading(false)
                 if (task.isSuccessful) {
                     showSnackbar("Đăng nhập Google thành công!", isSuccess = true)
-                    binding.root.postDelayed({
-                        startActivity(Intent(this, MainActivity::class.java))
-                        finish()
-                    }, 800)
+                    val user = firebaseService.auth.currentUser
+                    if (user != null) {
+                        val userId = user.uid
+                        val userModel = User(
+                            id = userId,
+                            username = user.displayName ?: "",
+                            email = user.email ?: "")
+                        firebaseService.db.collection("users").document(userId)
+                            .set(userModel)
+                            .addOnSuccessListener {
+                                binding.root.postDelayed({
+                                    startActivity(Intent(this, MainActivity::class.java))
+                                    finish()
+                                }, 800)
+                            }
+                            .addOnFailureListener {
+                                setLoading(false)
+                                showSnackbar("Lỗi lưu dữ liệu: ${it.message}")
+                            }
+                    }
+
                 } else {
                     showSnackbar("Xác thực Google thất bại: ${task.exception?.localizedMessage}")
                 }
